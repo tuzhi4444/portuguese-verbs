@@ -38,6 +38,39 @@ const useW = () => {
 
 const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
 
+// ─── VERB CONJUGATION DATA ──────────────────────────────────────────
+const V_PRON     = ["eu","tu","ele/ela","nós","eles/elas"];
+const V_PRON_ZH  = ["我","你","他/她","我们","他们/她们"];
+const V_ZH = { CANTAR:"唱歌",BEBER:"喝",PARTIR:"出发/离开",SER:"是（本质）",IR:"去",ESTAR:"是（状态）",TER:"有/拥有",FAZER:"做",PODER:"能/可以",VIR:"来",VER:"看",LER:"读",SAIR:"出去",DORMIR:"睡觉",DAR:"给",OUVIR:"听",SABER:"知道/会",PEDIR:"请求/要","PÔR":"放置",QUERER:"想要",TRAZER:"带来",DIZER:"说" };
+const V_TENSE_ZH = { presente:"现在时",perfeito:"简单过去时",imperfeito:"未完成过去时",composto:"复合过去时" };
+const V_TENSE_PT = { presente:"Presente",perfeito:"Pretérito Perfeito",imperfeito:"Pretérito Imperfeito",composto:"Pretérito Perfeito Composto" };
+const V_TENSE_COL = { presente:"#2d6a4f",perfeito:"#1d3557",imperfeito:"#7a3b1e",composto:"#4a1c6e" };
+const VERBS = {
+  CANTAR:{ tipo:"Regular -AR", presente:["Canto","Cantas","Canta","Cantamos","Cantam"], perfeito:["Cantei","Cantaste","Cantou","Cantámos","Cantaram"], imperfeito:["Cantava","Cantavas","Cantava","Cantávamos","Cantavam"], composto:["Tenho cantado","Tens cantado","Tem cantado","Temos cantado","Têm cantado"], impAfirm:["Canta (tu)","Cante (você)","Cantem (vocês)"], impNeg:["Não cantes","Não cante","Não cantem"], participio:"Cantado" },
+  BEBER:{ tipo:"Regular -ER", presente:["Bebo","Bebes","Bebe","Bebemos","Bebem"], perfeito:["Bebi","Bebeste","Bebeu","Bebemos","Beberam"], imperfeito:["Bebia","Bebias","Bebia","Bebíamos","Bebiam"], composto:["Tenho bebido","Tens bebido","Tem bebido","Temos bebido","Têm bebido"], impAfirm:["Bebe","Beba","Bebam"], impNeg:["Não bebas","Não beba","Não bebam"], participio:"Bebido" },
+  PARTIR:{ tipo:"Regular -IR", presente:["Parto","Partes","Parte","Partimos","Partem"], perfeito:["Parti","Partiste","Partiu","Partimos","Partiram"], imperfeito:["Partia","Partias","Partia","Partíamos","Partiam"], composto:["Tenho partido","Tens partido","Tem partido","Temos partido","Têm partido"], impAfirm:["Parte","Parta","Partam"], impNeg:["Não partas","Não parta","Não partam"], participio:"Partido" },
+  SER:{ tipo:"Irregular", presente:["Sou","És","É","Somos","São"], perfeito:["Fui","Foste","Foi","Fomos","Foram"], imperfeito:["Era","Eras","Era","Éramos","Eram"], composto:["Tenho sido","Tens sido","Tem sido","Temos sido","Têm sido"], impAfirm:["Sê","Seja","Sejam"], impNeg:["Não sejas","Não seja","Não sejam"], participio:"Sido" },
+  IR:{ tipo:"Irregular", presente:["Vou","Vais","Vai","Vamos","Vão"], perfeito:["Fui","Foste","Foi","Fomos","Foram"], imperfeito:["Ia","Ias","Ia","Íamos","Iam"], composto:["Tenho ido","Tens ido","Tem ido","Temos ido","Têm ido"], impAfirm:["Vai","Vá","Vão"], impNeg:["Não vás","Não vá","Não vão"], participio:"Ido" },
+  ESTAR:{ tipo:"Irregular", presente:["Estou","Estás","Está","Estamos","Estão"], perfeito:["Estive","Estiveste","Esteve","Estivemos","Estiveram"], imperfeito:["Estava","Estavas","Estava","Estávamos","Estavam"], composto:["Tenho estado","Tens estado","Tem estado","Temos estado","Têm estado"], impAfirm:["Está","Esteja","Estejam"], impNeg:["Não estejas","Não esteja","Não estejam"], participio:"Estado" },
+  TER:{ tipo:"Irregular", presente:["Tenho","Tens","Tem","Temos","Têm"], perfeito:["Tive","Tiveste","Teve","Tivemos","Tiveram"], imperfeito:["Tinha","Tinhas","Tinha","Tínhamos","Tinham"], composto:["Tenho tido","Tens tido","Tem tido","Temos tido","Têm tido"], impAfirm:["Tem","Tenha","Tenham"], impNeg:["Não tenhas","Não tenha","Não tenham"], participio:"Tido" },
+  FAZER:{ tipo:"Irregular", presente:["Faço","Fazes","Faz","Fazemos","Fazem"], perfeito:["Fiz","Fizeste","Fez","Fizemos","Fizeram"], imperfeito:["Fazia","Fazias","Fazia","Fazíamos","Faziam"], composto:["Tenho feito","Tens feito","Tem feito","Temos feito","Têm feito"], impAfirm:["Faz","Faça","Façam"], impNeg:["Não faças","Não faça","Não façam"], participio:"Feito" },
+  PODER:{ tipo:"Irregular", presente:["Posso","Podes","Pode","Podemos","Podem"], perfeito:["Pude","Pudeste","Pôde","Pudemos","Puderam"], imperfeito:["Podia","Podias","Podia","Podíamos","Podiam"], composto:["Tenho podido","Tens podido","Tem podido","Temos podido","Têm podido"], impAfirm:[], impNeg:[], participio:"Podido" },
+  VIR:{ tipo:"Irregular", presente:["Venho","Vens","Vem","Vimos","Vêm"], perfeito:["Vim","Vieste","Veio","Viemos","Vieram"], imperfeito:["Vinha","Vinhas","Vinha","Vínhamos","Vinham"], composto:["Tenho vindo","Tens vindo","Tem vindo","Temos vindo","Têm vindo"], impAfirm:["Vem","Venha","Venham"], impNeg:["Não venhas","Não venha","Não venham"], participio:"Vindo" },
+  VER:{ tipo:"Irregular", presente:["Vejo","Vês","Vê","Vemos","Veem"], perfeito:["Vi","Viste","Viu","Vimos","Viram"], imperfeito:["Via","Vias","Via","Víamos","Viam"], composto:["Tenho visto","Tens visto","Tem visto","Temos visto","Têm visto"], impAfirm:["Vê","Veja","Vejam"], impNeg:["Não vejas","Não veja","Não vejam"], participio:"Visto" },
+  LER:{ tipo:"Irregular", presente:["Leio","Lês","Lê","Lemos","Leem"], perfeito:["Li","Leste","Leu","Lemos","Leram"], imperfeito:["Lia","Lias","Lia","Líamos","Liam"], composto:["Tenho lido","Tens lido","Tem lido","Temos lido","Têm lido"], impAfirm:["Lê","Leia","Leiam"], impNeg:["Não leias","Não leia","Não leiam"], participio:"Lido" },
+  SAIR:{ tipo:"Irregular", presente:["Saio","Sais","Sai","Saímos","Saem"], perfeito:["Saí","Saíste","Saiu","Saímos","Saíram"], imperfeito:["Saía","Saías","Saía","Saíamos","Saíam"], composto:["Tenho saído","Tens saído","Tem saído","Temos saído","Têm saído"], impAfirm:["Sai","Saia","Saiam"], impNeg:["Não saias","Não saia","Não saiam"], participio:"Saído" },
+  DORMIR:{ tipo:"Irregular", presente:["Durmo","Dormes","Dorme","Dormimos","Dormem"], perfeito:["Dormi","Dormiste","Dormiu","Dormimos","Dormiram"], imperfeito:["Dormia","Dormias","Dormia","Dormíamos","Dormiam"], composto:["Tenho dormido","Tens dormido","Tem dormido","Temos dormido","Têm dormido"], impAfirm:["Dorme","Durma","Durmam"], impNeg:["Não durmas","Não durma","Não durmam"], participio:"Dormido" },
+  DAR:{ tipo:"Irregular", presente:["Dou","Dás","Dá","Damos","Dão"], perfeito:["Dei","Deste","Deu","Demos","Deram"], imperfeito:["Dava","Davas","Dava","Dávamos","Davam"], composto:["Tenho dado","Tens dado","Tem dado","Temos dado","Têm dado"], impAfirm:["Dá","Dê","Deem"], impNeg:["Não dês","Não dê","Não deem"], participio:"Dado" },
+  OUVIR:{ tipo:"Irregular", presente:["Ouço","Ouves","Ouve","Ouvimos","Ouvem"], perfeito:["Ouvi","Ouviste","Ouviu","Ouvimos","Ouviram"], imperfeito:["Ouvia","Ouvias","Ouvia","Ouvíamos","Ouviam"], composto:["Tenho ouvido","Tens ouvido","Tem ouvido","Temos ouvido","Têm ouvido"], impAfirm:["Ouve","Ouça","Ouçam"], impNeg:["Não ouças","Não ouça","Não ouçam"], participio:"Ouvido" },
+  SABER:{ tipo:"Irregular", presente:["Sei","Sabes","Sabe","Sabemos","Sabem"], perfeito:["Soube","Soubeste","Soube","Soubemos","Souberam"], imperfeito:["Sabia","Sabias","Sabia","Sabíamos","Sabiam"], composto:["Tenho sabido","Tens sabido","Tem sabido","Temos sabido","Têm sabido"], impAfirm:["Sabe","Saiba","Saibam"], impNeg:["Não saibas","Não saiba","Não saibam"], participio:"Sabido" },
+  PEDIR:{ tipo:"Irregular", presente:["Peço","Pedes","Pede","Pedimos","Pedem"], perfeito:["Pedi","Pediste","Pediu","Pedimos","Pediram"], imperfeito:["Pedia","Pedias","Pedia","Pedíamos","Pediam"], composto:["Tenho pedido","Tens pedido","Tem pedido","Temos pedido","Têm pedido"], impAfirm:["Pede","Peça","Peçam"], impNeg:["Não peças","Não peça","Não peçam"], participio:"Pedido" },
+  "PÔR":{ tipo:"Irregular", presente:["Ponho","Pões","Põe","Pomos","Põem"], perfeito:["Pus","Puseste","Pôs","Pusemos","Puseram"], imperfeito:["Punha","Punhas","Punha","Púnhamos","Punham"], composto:["Tenho posto","Tens posto","Tem posto","Temos posto","Têm posto"], impAfirm:["Põe","Ponha","Ponham"], impNeg:["Não ponhas","Não ponha","Não ponham"], participio:"Posto" },
+  QUERER:{ tipo:"Irregular", presente:["Quero","Queres","Quer","Queremos","Querem"], perfeito:["Quis","Quiseste","Quis","Quisemos","Quiseram"], imperfeito:["Queria","Querias","Queria","Queríamos","Queriam"], composto:["Tenho querido","Tens querido","Tem querido","Temos querido","Têm querido"], impAfirm:[], impNeg:[], participio:"Querido" },
+  TRAZER:{ tipo:"Irregular", presente:["Trago","Trazes","Traz","Trazemos","Trazem"], perfeito:["Trouxe","Trouxeste","Trouxe","Trouxemos","Trouxeram"], imperfeito:["Trazia","Trazias","Trazia","Trazíamos","Traziam"], composto:["Tenho trazido","Tens trazido","Tem trazido","Temos trazido","Têm trazido"], impAfirm:["Traz","Traga","Tragam"], impNeg:["Não tragas","Não traga","Não tragam"], participio:"Trazido" },
+  DIZER:{ tipo:"Irregular", presente:["Digo","Dizes","Diz","Dizemos","Dizem"], perfeito:["Disse","Disseste","Disse","Dissemos","Disseram"], imperfeito:["Dizia","Dizias","Dizia","Dizíamos","Diziam"], composto:["Tenho dito","Tens dito","Tem dito","Temos dito","Têm dito"], impAfirm:["Diz","Diga","Digam"], impNeg:["Não digas","Não diga","Não digam"], participio:"Dito" },
+};
+const VERB_LIST = Object.keys(VERBS);
+
 // ─── LEVEL BADGE ────────────────────────────────────────────────────
 const LEVEL_COLOR = { A1:"#2d6a4f", A2:"#1d6a8b", B1:"#7a3b1e" };
 
@@ -934,6 +967,208 @@ function QuizView({ unit, onDone, isMobile }) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
+//  VERB TOOL — Table · Flashcard · Quiz
+// ══════════════════════════════════════════════════════════════════════
+
+function VerbTableView({ isMobile }) {
+  const [verbKey, setVerbKey] = useState("SER");
+  const [filter, setFilter] = useState("all");
+  const v = VERBS[verbKey];
+  const tenses = Object.keys(V_TENSE_ZH);
+  return (
+    <div style={{ height:"100%", overflowY:"auto", padding:isMobile?"14px 12px":"24px 32px" }}>
+      <div style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?20:26, color:"#1a1a2e", marginBottom:4 }}>🔤 动词变位总表</div>
+      <div style={{ fontSize:12, color:"#888", marginBottom:16 }}>Conjugação Verbal · 22 个常用动词</div>
+
+      {/* Verb picker */}
+      <div style={{ background:"#fff", borderRadius:12, padding:"12px 14px", marginBottom:14, boxShadow:"0 2px 10px #0000000a" }}>
+        <div style={{ fontSize:11, color:"#888", marginBottom:8, fontWeight:700, letterSpacing:1 }}>选择动词</div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+          {VERB_LIST.map(k => (
+            <button key={k} onClick={()=>setVerbKey(k)} style={{ padding:"5px 10px", borderRadius:8, border:"none", background:verbKey===k?"#1a1a2e":"#f0ebe0", color:verbKey===k?"#f5e6c8":"#555", fontSize:12, fontWeight:verbKey===k?700:400, transition:"all .15s" }}>
+              {k} <span style={{ fontSize:10, opacity:.65 }}>{V_ZH[k]}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Verb header */}
+      <div style={{ background:"linear-gradient(135deg,#1a1a2e,#2d2d50)", borderRadius:14, padding:"14px 20px", marginBottom:14, color:"#fff", display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
+        <div>
+          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?22:28, fontWeight:700 }}>{verbKey}</div>
+          <div style={{ fontSize:13, color:"#f5e6c8aa", marginTop:2 }}>{V_ZH[verbKey]} · {v.tipo}</div>
+        </div>
+        <div style={{ marginLeft:"auto", background:"#f5e6c815", borderRadius:10, padding:"8px 14px", fontSize:12, color:"#f5e6c8" }}>
+          分词 Particípio: <strong>{v.participio}</strong>
+        </div>
+      </div>
+
+      {/* Tense filter */}
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:14 }}>
+        {[["all","全部"],,...tenses.map(t=>[t,V_TENSE_ZH[t]])].map(([k,label])=>(
+          <button key={k} onClick={()=>setFilter(k)} style={{ padding:"5px 13px", borderRadius:10, border:"none", background:filter===k?(k==="all"?"#1a1a2e":V_TENSE_COL[k]):"#f0ebe0", color:filter===k?"#fff":"#666", fontSize:12, fontWeight:700, transition:"all .15s" }}>{label}</button>
+        ))}
+      </div>
+
+      {/* Tense tables */}
+      {tenses.filter(t=>filter==="all"||filter===t).map(t=>(
+        <div key={t} style={{ marginBottom:18 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
+            <span style={{ width:8, height:8, borderRadius:"50%", background:V_TENSE_COL[t], display:"inline-block" }}/>
+            <span style={{ fontWeight:700, fontSize:13, color:V_TENSE_COL[t] }}>{V_TENSE_ZH[t]}</span>
+            <span style={{ fontSize:11, color:"#aaa" }}>{V_TENSE_PT[t]}</span>
+          </div>
+          <div style={{ background:"#fff", borderRadius:12, overflow:"hidden", boxShadow:"0 2px 10px #0000000a" }}>
+            <table style={{ width:"100%", borderCollapse:"collapse" }}>
+              <tbody>
+                {V_PRON.map((p,i)=>(
+                  <tr key={i} style={{ background:i%2===0?"#faf7f0":"#fff" }}>
+                    <td style={{ padding:"9px 14px", fontSize:12, color:"#999", width:"40%" }}>{p} <span style={{ fontSize:11, color:"#ccc" }}>({V_PRON_ZH[i]})</span></td>
+                    <td style={{ padding:"9px 14px", fontSize:15, fontWeight:600, color:"#1a1a2e" }}>{v[t][i]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+
+      {/* Imperative */}
+      {filter==="all" && v.impAfirm && v.impAfirm.length>0 && (
+        <div style={{ marginBottom:20 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
+            <span style={{ width:8, height:8, borderRadius:"50%", background:"#b5451b", display:"inline-block" }}/>
+            <span style={{ fontWeight:700, fontSize:13, color:"#b5451b" }}>命令式 Imperativo</span>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+            {[["肯定 Afirmativo","#b5451b",v.impAfirm],["否定 Negativo","#4a1c6e",v.impNeg]].map(([label,col,forms])=>(
+              <div key={label} style={{ background:"#fff", borderRadius:12, padding:"12px 14px", boxShadow:"0 2px 10px #0000000a" }}>
+                <div style={{ fontSize:11, color:col, fontWeight:700, marginBottom:8 }}>{label}</div>
+                {forms.map((f,i)=>(<div key={i} style={{ fontSize:13, color:"#1a1a2e", padding:"3px 0", borderBottom:i<forms.length-1?"1px solid #f0ebe0":"none" }}>{f}</div>))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VerbFlashView({ isMobile, onBack }) {
+  const allCards = React.useMemo(()=>{
+    const cards=[];
+    Object.entries(VERBS).forEach(([verb,data])=>{
+      Object.keys(V_TENSE_ZH).forEach(tense=>{
+        V_PRON.forEach((pron,i)=>{ cards.push({verb,zh:V_ZH[verb],tense,pron,pronZh:V_PRON_ZH[i],form:data[tense][i]}); });
+      });
+    });
+    return shuffle(cards);
+  },[]);
+  const [idx,setIdx]=useState(0);
+  const [flipped,setFlipped]=useState(false);
+  const card=allCards[idx%allCards.length];
+  return (
+    <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:16,padding:isMobile?"0 14px":"0 40px" }}>
+      <div style={{ fontSize:12, color:"#888" }}>闪卡 Flashcards · {idx+1} / {allCards.length}</div>
+      <div onClick={()=>setFlipped(f=>!f)} style={{ width:"100%",maxWidth:520,background:flipped?"linear-gradient(135deg,#1d3557,#457b9d)":"linear-gradient(135deg,#1a1a2e,#2d2d50)",borderRadius:20,padding:isMobile?"32px 24px":"44px 48px",textAlign:"center",cursor:"pointer",boxShadow:"0 16px 48px rgba(0,0,0,0.25)",transition:"background .3s",minHeight:200,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12 }}>
+        {!flipped ? (
+          <>
+            <div style={{ fontSize:11,color:"rgba(255,255,255,.5)",letterSpacing:2,textTransform:"uppercase" }}>{V_TENSE_ZH[card.tense]} · {card.pron} ({card.pronZh})</div>
+            <div style={{ fontFamily:"'Playfair Display',serif",fontSize:isMobile?28:38,color:"#fff",fontWeight:700 }}>{card.verb}</div>
+            <div style={{ fontSize:14,color:"rgba(255,255,255,.6)" }}>{card.zh}</div>
+            <div style={{ fontSize:12,color:"rgba(255,255,255,.3)",marginTop:8 }}>点击翻转 →</div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize:11,color:"rgba(255,255,255,.5)",letterSpacing:2,textTransform:"uppercase" }}>{V_TENSE_ZH[card.tense]} · {card.pron}</div>
+            <div style={{ fontFamily:"'Playfair Display',serif",fontSize:isMobile?32:44,color:"#f5e6c8",fontWeight:700 }}>{card.form}</div>
+            <div style={{ fontSize:13,color:"rgba(255,255,255,.55)" }}>{card.verb} ({card.zh})</div>
+          </>
+        )}
+      </div>
+      <div style={{ display:"flex",gap:12 }}>
+        <button onClick={()=>{setIdx(i=>(i-1+allCards.length)%allCards.length);setFlipped(false);}} style={{ background:"#f0ebe0",border:"none",borderRadius:12,padding:"10px 22px",fontSize:14,color:"#555" }}>← 上一张</button>
+        <button onClick={()=>{setIdx(i=>(i+1)%allCards.length);setFlipped(false);}} style={{ background:"#1a1a2e",border:"none",borderRadius:12,padding:"10px 22px",fontSize:14,color:"#fff" }}>下一张 →</button>
+      </div>
+      <button onClick={onBack} style={{ background:"transparent",border:"1px solid #ccc",color:"#888",borderRadius:10,padding:"6px 16px",fontSize:12 }}>返回变位表</button>
+    </div>
+  );
+}
+
+function VerbQuizView({ isMobile, onBack }) {
+  const questions = React.useMemo(()=>{
+    const all=[];
+    const vEntries=Object.entries(VERBS);
+    vEntries.forEach(([verb,data])=>{
+      Object.keys(V_TENSE_ZH).forEach(tense=>{
+        V_PRON.forEach((pron,i)=>{
+          const correct=data[tense][i];
+          const wrongs=[];
+          const others=VERB_LIST.filter(k=>k!==verb);
+          let attempts=0;
+          while(wrongs.length<3&&attempts<50){
+            attempts++;
+            const rv=others[Math.floor(Math.random()*others.length)];
+            const ri=Math.floor(Math.random()*V_PRON.length);
+            const w=VERBS[rv][tense][ri];
+            if(w&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+          }
+          if(wrongs.length===3) all.push({q:`${verb} (${V_ZH[verb]}) — ${V_TENSE_ZH[tense]} — ${pron} (${V_PRON_ZH[i]})`,opts:shuffle([correct,...wrongs]),a:correct,hint:`${verb} ${V_TENSE_ZH[tense]} ${pron} = ${correct}`});
+        });
+      });
+    });
+    return shuffle(all).slice(0,20);
+  },[]);
+  const [idx,setIdx]=useState(0);
+  const [chosen,setChosen]=useState(null);
+  const [score,setScore]=useState({c:0,w:0});
+  const next=()=>{setIdx(i=>i+1);setChosen(null);};
+  if(idx>=questions.length){
+    const pct=Math.round(score.c/questions.length*100);
+    return (
+      <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:16,padding:"0 20px" }}>
+        <div style={{ fontSize:isMobile?52:72 }}>{pct>=80?"🏆":pct>=60?"👍":"📚"}</div>
+        <div style={{ fontFamily:"'Playfair Display',serif",fontSize:isMobile?26:32,color:"#1a1a2e" }}>练习完成！</div>
+        <div style={{ fontSize:15,color:"#666" }}>✓ {score.c} 正确 · ✗ {score.w} 错误 · {pct}%</div>
+        <div style={{ display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center" }}>
+          <button onClick={onBack} style={{ background:"#888",color:"#fff",border:"none",borderRadius:12,padding:"10px 24px",fontSize:14 }}>返回</button>
+          <button onClick={()=>{setIdx(0);setChosen(null);setScore({c:0,w:0});}} style={{ background:"#1a1a2e",color:"#fff",border:"none",borderRadius:12,padding:"10px 24px",fontSize:14 }}>再练一次</button>
+        </div>
+      </div>
+    );
+  }
+  const q=questions[idx];
+  return (
+    <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:isMobile?14:20,padding:isMobile?"0 14px":"0 40px" }}>
+      <div style={{ width:"100%",maxWidth:600 }}>
+        <div style={{ display:"flex",justifyContent:"space-between",fontSize:12,color:"#888",marginBottom:6 }}>
+          <span>{idx+1} / {questions.length}</span>
+          <span><span style={{ color:"#2d6a4f" }}>✓{score.c}</span> &nbsp; <span style={{ color:"#8b1a1a" }}>✗{score.w}</span></span>
+        </div>
+        <div style={{ height:4,background:"#ddd",borderRadius:4 }}><div style={{ height:"100%",width:`${idx/questions.length*100}%`,background:"#1d3557",borderRadius:4,transition:"width .4s" }}/></div>
+      </div>
+      <div style={{ width:"100%",maxWidth:600,background:"linear-gradient(135deg,#1d3557,#1d3557bb)",color:"#fff",borderRadius:20,padding:isMobile?"22px 18px":"32px 40px",textAlign:"center",boxShadow:"0 16px 48px #1d355744" }}>
+        <div style={{ fontSize:10,opacity:.55,letterSpacing:2,marginBottom:10,textTransform:"uppercase" }}>选出正确的变位形式</div>
+        <div style={{ fontSize:isMobile?15:19,fontWeight:700,lineHeight:1.6 }}>{q.q}</div>
+      </div>
+      <div style={{ width:"100%",maxWidth:600,display:"grid",gridTemplateColumns:"1fr 1fr",gap:10 }}>
+        {q.opts.map((opt,i)=>{
+          let bg="#fff",border="2px solid #e0d8cc",color="#333",fw=400;
+          if(chosen){if(opt===q.a){bg="#e8f5e9";border="2px solid #2d6a4f";color="#1a5c2e";fw=700;}else if(opt===chosen){bg="#fdecea";border="2px solid #8b1a1a";color="#5c1010";}}
+          return (<button key={i} onClick={()=>{if(!chosen){setChosen(opt);setScore(s=>({...s,[opt===q.a?"c":"w"]:s[opt===q.a?"c":"w"]+1}));}}} style={{ background:bg,border,color,fontWeight:fw,borderRadius:14,padding:isMobile?"12px 10px":"14px 16px",fontSize:isMobile?14:16,textAlign:"center",transition:"all .15s",boxShadow:"0 2px 10px #0000000d" }}>{opt}</button>);
+        })}
+      </div>
+      {chosen && (
+        <div style={{ textAlign:"center" }}>
+          {chosen===q.a?<div style={{ color:"#2d6a4f",fontWeight:700,fontSize:16,marginBottom:8 }}>✓ 正确！</div>:<div style={{ marginBottom:8 }}><div style={{ color:"#8b1a1a",fontWeight:700,fontSize:16 }}>✗ 正确答案：<em>{q.a}</em></div><div style={{ fontSize:12,color:"#888",marginTop:4 }}>💡 {q.hint}</div></div>}
+          <button onClick={next} style={{ background:"#1a1a2e",color:"#fff",border:"none",borderRadius:12,padding:"11px 36px",fontSize:14 }}>下一题 →</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
 //  MAIN APP
 // ══════════════════════════════════════════════════════════════════════
 function App() {
@@ -942,12 +1177,13 @@ function App() {
   const isTablet = w >= 640 && w < 1024;
   const SIDEBAR_W = isMobile ? 270 : isTablet ? 200 : 230;
 
-  const [page, setPage] = useState("home"); // "home" | unitId+"_ref" | unitId+"_quiz"
+  const [page, setPage] = useState("home"); // "home" | unitId+"_ref" | unitId+"_quiz" | "verb_table" | "verb_flash" | "verb_quiz"
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navTo = (p) => { setPage(p); if(isMobile) setSidebarOpen(false); };
 
-  const currentUnitId = page.replace(/_ref|_quiz/,"");
+  const isVerbPage = page.startsWith("verb_");
+  const currentUnitId = isVerbPage ? null : page.replace(/_ref|_quiz/,"");
   const currentUnit = UNITS.find(u=>u.id===currentUnitId);
   const isRef = page.endsWith("_ref");
   const isQuiz = page.endsWith("_quiz");
@@ -998,9 +1234,30 @@ function App() {
         ))}
       </div>
 
+      {/* Verb tool section */}
+      <div style={{ padding:"0 10px" }}>
+        <div style={{ fontSize:9,color:"#f5e6c840",letterSpacing:2,textTransform:"uppercase",margin:"10px 4px 5px",display:"flex",alignItems:"center",gap:6 }}>
+          <span style={{ background:"#1d3557",borderRadius:3,padding:"1px 5px",color:"#fff",fontSize:8 }}>工具</span>
+          <span>动词练习</span>
+        </div>
+        <div style={{ marginBottom:3 }}>
+          <button onClick={()=>navTo("verb_table")} style={{ display:"flex",alignItems:"center",gap:7,width:"100%",padding:"8px 10px",borderRadius:9,border:"none",background:isVerbPage?"#f5e6c818":"transparent",color:isVerbPage?"#f5e6c8":"#f5e6c870",fontSize:12,fontWeight:isVerbPage?700:400,borderLeft:isVerbPage?"3px solid #c8a96e":"3px solid transparent",textAlign:"left" }}>
+            <span style={{ fontSize:14 }}>🔤</span>
+            <span style={{ flex:1 }}>动词变位表</span>
+          </button>
+          {isVerbPage && (
+            <div style={{ display:"flex",gap:4,paddingLeft:28,marginTop:3 }}>
+              {[["verb_table","📋查表"],["verb_flash","🃏闪卡"],["verb_quiz","✏️练习"]].map(([p,label])=>(
+                <button key={p} onClick={()=>navTo(p)} style={{ flex:1,padding:"4px 5px",borderRadius:7,border:"none",background:page===p?"#c8a96e":"#f5e6c812",color:page===p?"#1a1a2e":"#f5e6c870",fontSize:10,fontWeight:700 }}>{label}</button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       <div style={{ flex:1 }} />
       <div style={{ padding:"10px 12px", borderTop:"1px solid #2d2d5044", fontSize:9, color:"#f5e6c830", lineHeight:1.6 }}>
-        10 个语法单元 · {UNITS.reduce((s,u)=>s+u.quiz.length,0)} 道练习题
+        10 个语法单元 · {UNITS.reduce((s,u)=>s+u.quiz.length,0)} 道练习题 · 22 个动词
       </div>
     </div>
   );
@@ -1027,6 +1284,19 @@ function App() {
             <div style={{ fontSize:11, opacity:.6, lineHeight:1.5 }}>{u.quiz.length} 道练习题</div>
           </button>
         ))}
+      </div>
+
+      {/* Verb tool shortcut */}
+      <div style={{ background:"linear-gradient(135deg,#1d3557,#2d4a7a)", borderRadius:14, padding:"16px 20px", marginBottom:20, maxWidth:740, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap", boxShadow:"0 4px 20px #1d355733" }}>
+        <div style={{ flex:1 }}>
+          <div style={{ fontSize:15, fontWeight:700, color:"#fff", marginBottom:3 }}>🔤 动词变位表 <span style={{ fontSize:11, background:"#f5e6c820", borderRadius:6, padding:"2px 8px", marginLeft:6 }}>工具</span></div>
+          <div style={{ fontSize:12, color:"rgba(255,255,255,.6)" }}>22 个常用动词 · 4 种时态 · 命令式 · 闪卡练习</div>
+        </div>
+        <div style={{ display:"flex", gap:8 }}>
+          {[["📋查表","verb_table"],["🃏闪卡","verb_flash"],["✏️练习","verb_quiz"]].map(([label,p])=>(
+            <button key={p} onClick={()=>navTo(p)} style={{ background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.2)", borderRadius:10, padding:"7px 14px", color:"#fff", fontSize:12, fontWeight:700 }}>{label}</button>
+          ))}
+        </div>
       </div>
 
       {/* Quick tips */}
@@ -1058,12 +1328,19 @@ function App() {
         <div style={{ display:"flex", alignItems:"center", padding:"0 14px", height:50, background:"#1a1a2e", borderBottom:"1px solid #2d2d50", flexShrink:0 }}>
           <button onClick={()=>setSidebarOpen(true)} style={{ background:"transparent", border:"none", color:"#f5e6c8", fontSize:22, marginRight:10 }}>☰</button>
           <div style={{ fontFamily:"'Playfair Display',serif", color:"#f5e6c8", fontSize:16, fontWeight:700 }}>
-            {page==="home" ? "葡语语法全览" : currentUnit?.title || ""}
+            {page==="home" ? "葡语语法全览" : isVerbPage ? "动词变位表" : currentUnit?.title || ""}
           </div>
           {currentUnit && (
             <div style={{ marginLeft:"auto", display:"flex", gap:6 }}>
               {[["_ref","📖"],["_quiz","✏️"]].map(([suffix,label])=>(
                 <button key={suffix} onClick={()=>navTo(currentUnitId+suffix)} style={{ background:page===currentUnitId+suffix?"#c8a96e":"transparent", border:"1px solid #f5e6c830", borderRadius:8, padding:"4px 8px", color:"#f5e6c8", fontSize:11 }}>{label}</button>
+              ))}
+            </div>
+          )}
+          {isVerbPage && (
+            <div style={{ marginLeft:"auto", display:"flex", gap:6 }}>
+              {[["verb_table","📋"],["verb_flash","🃏"],["verb_quiz","✏️"]].map(([p,label])=>(
+                <button key={p} onClick={()=>navTo(p)} style={{ background:page===p?"#c8a96e":"transparent", border:"1px solid #f5e6c830", borderRadius:8, padding:"4px 8px", color:"#f5e6c8", fontSize:11 }}>{label}</button>
               ))}
             </div>
           )}
@@ -1085,6 +1362,9 @@ function App() {
         {page==="home" && <HomeView />}
         {currentUnit && isRef && <ReferenceView unit={currentUnit} isMobile={isMobile} />}
         {currentUnit && isQuiz && <QuizView unit={currentUnit} onDone={()=>navTo(currentUnitId+"_ref")} isMobile={isMobile} />}
+        {page==="verb_table" && <VerbTableView isMobile={isMobile} />}
+        {page==="verb_flash" && <VerbFlashView isMobile={isMobile} onBack={()=>navTo("verb_table")} />}
+        {page==="verb_quiz" && <VerbQuizView isMobile={isMobile} onBack={()=>navTo("verb_table")} />}
       </div>
     </div>
   );
