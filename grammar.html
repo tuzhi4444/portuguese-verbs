@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>葡语语法全览 · Gramática Portuguesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body,#root{height:100%;width:100%}
+  body{font-family:'Lora',serif;background:#f5f0e8;overflow:hidden}
+  button{font-family:'Lora',serif;cursor:pointer}
+  input{font-family:'Lora',serif}
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:#ede8df}
+  ::-webkit-scrollbar-thumb{background:#b8a98a;border-radius:3px}
+  .hov{transition:all .15s}.hov:hover{transform:translateY(-2px);opacity:.88}
+  .card-h{transition:all .2s}.card-h:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.2)!important}
+  .sidebar-drawer{transition:transform .3s cubic-bezier(.4,0,.2,1)}
+  .tab-btn{transition:all .15s}
+  /* gender colors */
+  .masc{color:#1d3557} .fem{color:#8b1a1a} .neut{color:#5c4033}
+</style>
+</head>
+<body><div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ─── RESPONSIVE HOOK ────────────────────────────────────────────────
+const useW = () => {
+  const [w, setW] = useState(window.innerWidth);
+  useEffect(() => { const fn = () => setW(window.innerWidth); window.addEventListener('resize',fn); return ()=>window.removeEventListener('resize',fn); }, []);
+  return w;
+};
+
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+
+// ─── LEVEL BADGE ────────────────────────────────────────────────────
+const LEVEL_COLOR = { A1:"#2d6a4f", A2:"#1d6a8b", B1:"#7a3b1e" };
+
+// ══════════════════════════════════════════════════════════════════════
+//  GRAMMAR DATA
+// ══════════════════════════════════════════════════════════════════════
+const UNITS = [
+  // ──────────────── 1. 名词与冠词 ────────────────
+  {
+    id:"nouns", level:"A1", color:"#1d3557", icon:"📌",
+    title:"名词与冠词", sub:"Substantivos e Artigos",
+    intro:"葡语名词有「性」（阳/阴）和「数」（单/复），冠词必须与名词「性数一致」。这是葡语最基础也最重要的规则。",
+    tip:"🧠 记忆法：词尾 -o 通常是阳性（livr**o** 书），词尾 -a 通常是阴性（cas**a** 房子）。定冠词 o/a 就像中文的「这本/这座」，不定冠词 um/uma 就像「一本/一座」。",
+    confusion:"⚠️ 容易搞混：① homem（男人）和 mulher（女人）词尾不典型；② 有些 -a 结尾是阳性（o dia 一天，o mapa 地图）；③ 缩合形式（do/da/no/na）一定要背熟！",
+    tables:[
+      {
+        title:"定冠词 Artigo Definido（= the）",
+        headers:["","阳性 Masculino","阴性 Feminino"],
+        rows:[
+          ["单数",{word:"o",ex:"o livro（书）"},{word:"a",ex:"a mesa（桌子）"}],
+          ["复数",{word:"os",ex:"os livros"},{word:"as",ex:"as mesas"}],
+        ]
+      },
+      {
+        title:"不定冠词 Artigo Indefinido（= a/an）",
+        headers:["","阳性 Masculino","阴性 Feminino"],
+        rows:[
+          ["单数",{word:"um",ex:"um carro（一辆车）"},{word:"uma",ex:"uma casa（一座房子）"}],
+          ["复数",{word:"uns",ex:"uns livros（一些书）"},{word:"umas",ex:"umas flores（一些花）"}],
+        ]
+      },
+      {
+        title:"⚡ 介词缩合（必须背！）",
+        headers:["介词+冠词","缩合结果","例子","中文"],
+        rows:[
+          ["de + o","do","do livro","书的"],
+          ["de + a","da","da escola","学校的"],
+          ["de + os","dos","dos alunos","学生们的"],
+          ["de + as","das","das aulas","课的"],
+          ["em + o","no","no café","在咖啡馆"],
+          ["em + a","na","na escola","在学校"],
+          ["em + os","nos","nos jardins","在花园里"],
+          ["em + as","nas","nas lojas","在店里"],
+          ["a + o","ao","ao médico","去看医生"],
+          ["a + a","à","à farmácia","去药店"],
+          ["a + os","aos","aos amigos","给朋友们"],
+          ["a + as","às","às aulas","去上课"],
+        ],
+        wide:true
+      }
+    ],
+    examples:[
+      {pt:"O gato está na cama.", zh:"这只猫在床上。（o + na = em+a）"},
+      {pt:"Uma professora fala português.", zh:"一位老师说葡萄牙语。"},
+      {pt:"Gosto do café com leite.", zh:"我喜欢牛奶咖啡。（de+o=do）"},
+      {pt:"Os alunos vão à escola.", zh:"学生们去学校。（a+a=à）"},
+      {pt:"Vivo numa cidade bonita.", zh:"我住在一座美丽的城市。（em+uma=numa）"},
+      {pt:"Falo dos meus amigos.", zh:"我在讲我的朋友们。（de+os=dos）"},
+    ],
+    quiz:[
+      {q:"___ livro (书, 阳单, 特指)", opts:["o","a","os","um"], a:"o", hint:"定冠词 + 阳性单数"},
+      {q:"___ mesa (桌子, 阴单, 特指)", opts:["o","a","um","os"], a:"a", hint:"定冠词 + 阴性单数"},
+      {q:"Tenho ___ carro. (一辆车)", opts:["um","uma","o","uns"], a:"um", hint:"不定冠词 + 阳性单数"},
+      {q:"de + o = ?", opts:["do","da","no","ao"], a:"do", hint:"de + o 缩合为 do"},
+      {q:"em + a = ?", opts:["na","no","da","à"], a:"na", hint:"em + a 缩合为 na"},
+      {q:"a + o = ?", opts:["ao","à","do","no"], a:"ao", hint:"a + o 缩合为 ao"},
+      {q:"Estou ___ escola. (在学校)", opts:["na","no","da","à"], a:"na", hint:"em+a=na"},
+      {q:"Vou ___ médico. (去看医生)", opts:["ao","à","do","no"], a:"ao", hint:"a+o=ao"},
+      {q:"Gosto ___ livro. (喜欢这本书)", opts:["do","da","no","ao"], a:"do", hint:"de+o=do"},
+      {q:"___ flores (花们, 阴复, 特指)", opts:["as","os","umas","a"], a:"as", hint:"定冠词 + 阴性复数"},
+    ]
+  },
+
+  // ──────────────── 2. Ser vs Estar ────────────────
+  {
+    id:"ser_estar", level:"A1", color:"#2d6a4f", icon:"⚖️",
+    title:"Ser 与 Estar", sub:"Dois verbos 'ser'",
+    intro:"葡语有两个「是」：ser（本质上是）和 estar（状态上是）。这是中文母语者最难掌握的区别——中文只有一个「是/在」，葡语必须选一个！",
+    tip:"🧠 记忆口诀：Ser = 身份/本质（S=Stable 稳定的）。Estar = 状态/位置（E=Emotion 情绪/环境）。问自己：「这是暂时的还是永久的？」",
+    confusion:"⚠️ 最容易搞混的情况：① 位置：建筑用 SER（A escola é em Lisboa），人和物用 ESTAR（Estou em Lisboa）；② 情绪用 ESTAR（Estou feliz/triste）；③ 形容词有时两个都对但意思不同：é rico（他天生富有）vs está rico（这道菜很好吃）。",
+    tables:[
+      {
+        title:"Ser 的变位（现在时）",
+        headers:["人称","动词","人称","动词"],
+        rows:[
+          ["eu（我）","sou","nós（我们）","somos"],
+          ["tu（你）","és","vocês（你们）","são"],
+          ["ele/ela（他/她）","é","eles/elas（他们）","são"],
+        ]
+      },
+      {
+        title:"Estar 的变位（现在时）",
+        headers:["人称","动词","人称","动词"],
+        rows:[
+          ["eu（我）","estou","nós（我们）","estamos"],
+          ["tu（你）","estás","vocês（你们）","estão"],
+          ["ele/ela（他/她）","está","eles/elas（他们）","estão"],
+        ]
+      },
+      {
+        title:"用 SER 还是 ESTAR？",
+        headers:["用 SER 📌（永久/本质）","用 ESTAR 📍（暂时/状态）"],
+        rows:[
+          ["国籍：Sou chinês. 我是中国人","位置（人/物）：Estou em casa. 我在家"],
+          ["职业：Ela é médica. 她是医生","情绪/感受：Estás cansado? 你累了吗？"],
+          ["本质特征：O céu é azul. 天是蓝的","暂时状态：O café está quente. 咖啡是热的"],
+          ["材质：A mesa é de madeira. 桌子是木的","进行时搭配：Estou a comer. 我正在吃"],
+          ["时间/日期：São três horas. 现在三点","健康状况：Ele está doente. 他生病了"],
+          ["出身/来源：É de Lisboa. 他是里斯本人","婚姻状况*：Estou casado. 我已婚"],
+        ],
+        twoCol:true
+      }
+    ],
+    examples:[
+      {pt:"Sou estudante. Estou cansado.", zh:"我是学生（身份）。我很累（状态）。"},
+      {pt:"A Maria é bonita. O Pedro está bonito hoje.", zh:"Maria 天生漂亮。Pedro 今天看起来不错（暂时）。"},
+      {pt:"O hospital é na Avenida. Estou no hospital.", zh:"医院在大街上（位置固定）。我在医院里（人的位置）。"},
+      {pt:"Ela é feliz. vs Ela está feliz.", zh:"她是个开朗的人（性格）。她现在很高兴（此刻状态）。"},
+      {pt:"Que horas são? São dez horas.", zh:"现在几点？十点了。（时间用 ser）"},
+      {pt:"Como estás? Estou bem, obrigado.", zh:"你好吗？我很好，谢谢。（问候用 estar）"},
+    ],
+    quiz:[
+      {q:"Eu ___ chinês. (我是中国人, 国籍)", opts:["sou","estou","é","está"], a:"sou", hint:"国籍用 SER，eu → sou"},
+      {q:"Ela ___ cansada. (她累了, 暂时状态)", opts:["está","é","estou","são"], a:"está", hint:"疲劳是暂时状态，用 ESTAR"},
+      {q:"São ___ horas. (现在三点)", opts:["três","sou","estou","é"], a:"três", hint:"时间表达用 SER：são três horas"},
+      {q:"O café ___ quente. (咖啡是热的, 暂时)", opts:["está","é","estão","são"], a:"está", hint:"咖啡的温度是暂时状态，用 ESTAR"},
+      {q:"Ela ___ médica. (她是医生, 职业)", opts:["é","está","sou","são"], a:"é", hint:"职业用 SER，ela → é"},
+      {q:"Nós ___ em casa. (我们在家, 位置)", opts:["estamos","somos","estou","são"], a:"estamos", hint:"人的位置用 ESTAR，nós → estamos"},
+      {q:"A mesa ___ de madeira. (桌子是木制的)", opts:["é","está","são","estão"], a:"é", hint:"材质/本质用 SER，a mesa → é"},
+      {q:"Como ___ (你好吗？问候)", opts:["estás","és","estou","é"], a:"estás", hint:"问候/感受用 ESTAR，tu → estás"},
+    ]
+  },
+
+  // ──────────────── 3. 动词·现在时 ────────────────
+  {
+    id:"present", level:"A1", color:"#7a3b1e", icon:"⚡",
+    title:"动词·现在时", sub:"Presente do Indicativo",
+    intro:"葡语动词按词尾分三类：-AR（最多）、-ER、-IR。每类有固定的变位规律。先掌握规则动词，再记不规则动词。",
+    tip:"🧠 记忆法：-AR 动词最多，先把 falar 背熟当模板；-ER 用 comer；-IR 用 partir。不规则动词中，ser/estar/ter/ir 最常用，优先记。",
+    confusion:"⚠️ 容易搞混：① eu 的词尾通常是 -o（falo, como, parto）；② nós 词尾通常是 -mos；③ eles/elas/vocês 共用同一形式！ ④ 注意：vous 在欧洲葡语不常用，改用 vocês；⑤ ter 的 tu 是 tens（不是 teis）。",
+    tables:[
+      {
+        title:"规则动词三大模板",
+        headers:["人称","-AR  falar（说话）","-ER  comer（吃）","-IR  partir（出发）"],
+        rows:[
+          ["eu","falo","como","parto"],
+          ["tu","falas","comes","partes"],
+          ["ele/ela","fala","come","parte"],
+          ["nós","falamos","comemos","partimos"],
+          ["vocês","falam","comem","partem"],
+          ["eles/elas","falam","comem","partem"],
+        ]
+      },
+      {
+        title:"必会不规则动词",
+        headers:["人称","ser（是）","estar（是/在）","ter（有）","ir（去）","fazer（做）","poder（能）"],
+        rows:[
+          ["eu","sou","estou","tenho","vou","faço","posso"],
+          ["tu","és","estás","tens","vais","fazes","podes"],
+          ["ele/ela","é","está","tem","vai","faz","pode"],
+          ["nós","somos","estamos","temos","vamos","fazemos","podemos"],
+          ["vocês","são","estão","têm","vão","fazem","podem"],
+        ]
+      },
+      {
+        title:"常用不规则动词（续）",
+        headers:["人称","querer（想要）","vir（来）","ver（看）","saber（知道）","dizer（说）"],
+        rows:[
+          ["eu","quero","venho","vejo","sei","digo"],
+          ["tu","queres","vens","vês","sabes","dizes"],
+          ["ele/ela","quer","vem","vê","sabe","diz"],
+          ["nós","queremos","vimos","vemos","sabemos","dizemos"],
+          ["vocês","querem","vêm","veem","sabem","dizem"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Eu falo português e tu falas inglês.", zh:"我说葡萄牙语，你说英语。"},
+      {pt:"Ela come arroz todos os dias.", zh:"她每天吃米饭。"},
+      {pt:"Nós vamos ao cinema hoje.", zh:"我们今天去电影院。"},
+      {pt:"Tenho muitos amigos em Lisboa.", zh:"我在里斯本有很多朋友。"},
+      {pt:"Podes ajudar-me?", zh:"你能帮我吗？"},
+      {pt:"O que é que queres comer?", zh:"你想吃什么？"},
+    ],
+    quiz:[
+      {q:"Eu ___ português. (falar, 我说葡语)", opts:["falo","falas","fala","falamos"], a:"falo", hint:"falar: eu → falo（去掉-ar加-o）"},
+      {q:"Tu ___ muito. (comer, 你吃很多)", opts:["comes","come","como","comemos"], a:"comes", hint:"comer: tu → comes"},
+      {q:"Ela ___ de Lisboa. (partir, 她从里斯本出发)", opts:["parte","parto","partes","partem"], a:"parte", hint:"partir: ela → parte"},
+      {q:"Nós ___ em casa. (estar, 我们在家)", opts:["estamos","estou","estão","estás"], a:"estamos", hint:"estar: nós → estamos"},
+      {q:"Eu ___ um irmão. (ter, 我有一个兄弟)", opts:["tenho","tens","tem","temos"], a:"tenho", hint:"ter: eu → tenho（不规则！）"},
+      {q:"Eles ___ ao mercado. (ir, 他们去市场)", opts:["vão","vai","vou","vais"], a:"vão", hint:"ir: eles → vão（不规则！）"},
+      {q:"Tu ___ vir amanhã? (poder)", opts:["podes","posso","pode","podem"], a:"podes", hint:"poder: tu → podes"},
+      {q:"Vocês ___ português? (falar)", opts:["falam","falas","falamos","falo"], a:"falam", hint:"falar: vocês → falam"},
+      {q:"Eu ___ o que quero. (saber, 我知道我想要什么)", opts:["sei","sabe","sabes","sabemos"], a:"sei", hint:"saber: eu → sei（不规则！）"},
+      {q:"Ele ___ a janela. (ver, 他看着窗户)", opts:["vê","vejo","vês","veem"], a:"vê", hint:"ver: ele → vê"},
+    ]
+  },
+
+  // ──────────────── 4. 形容词 ────────────────
+  {
+    id:"adjectives", level:"A1", color:"#4a6741", icon:"🎨",
+    title:"形容词", sub:"Adjetivos",
+    intro:"葡语形容词必须与名词「性数一致」——名词是阳性就用阳性形容词，是阴性就用阴性形容词。这和中文完全不同（中文形容词不变化）。",
+    tip:"🧠 记忆规律：① 阳 -o → 阴 -a（bonito → bonita）；② 阳 -e/-ista/-al 不变（grande → grande，feliz → feliz）；③ 加复数一般加 -s；④ 形容词通常放名词后面（不同于中文！）。",
+    confusion:"⚠️ 注意：① ser + 形容词 = 本质（é inteligente 天生聪明）；estar + 形容词 = 暂时状态（está cansado 现在累）；② 少数形容词放前后意思不同：um grande homem（伟大的人）vs um homem grande（高大的人）。",
+    tables:[
+      {
+        title:"形容词性数变化规律",
+        headers:["类型","阳单","阴单","阳复","阴复"],
+        rows:[
+          ["-o结尾变-a","bonito（帅）","bonita（美）","bonitos","bonitas"],
+          ["-o结尾变-a","pequeno（小）","pequena","pequenos","pequenas"],
+          ["-e结尾不变","grande（大）","grande","grandes","grandes"],
+          ["-e结尾不变","inteligente（聪明）","inteligente","inteligentes","inteligentes"],
+          ["辅音结尾加-a","português","portuguesa","portugueses","portuguesas"],
+          ["-z结尾","feliz（幸福）","feliz","felizes","felizes"],
+        ]
+      },
+      {
+        title:"比较级与最高级",
+        headers:["类型","结构","例子","中文"],
+        rows:[
+          ["优等比较","mais + adj + do que","mais alto do que tu","比你高"],
+          ["劣等比较","menos + adj + do que","menos caro do que","比……便宜"],
+          ["同等比较","tão + adj + como","tão bonito como","和……一样美"],
+          ["相对最高级","o/a mais + adj","o mais alto da turma","班里最高的"],
+          ["绝对最高级","-íssimo/a","belíssimo（极美）","非常/极其……"],
+        ],
+        wide:true
+      },
+      {
+        title:"不规则比较级（必背）",
+        headers:["原级","比较级","最高级","中文"],
+        rows:[
+          ["bom（好）","melhor（更好）","o melhor（最好）","好"],
+          ["mau/mau（坏）","pior（更坏）","o pior（最坏）","坏"],
+          ["grande（大/伟大）","maior（更大）","o maior","大"],
+          ["pequeno（小）","menor（更小）","o menor","小"],
+          ["muito（多）","mais（更多）","o mais","多"],
+          ["pouco（少）","menos（更少）","o menos","少"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Tenho uma casa pequena mas bonita.", zh:"我有一座小但漂亮的房子。（阴性一致）"},
+      {pt:"O meu irmão é alto e inteligente.", zh:"我哥哥又高又聪明。（阳性 ser + adj）"},
+      {pt:"Este exercício é mais difícil do que o outro.", zh:"这道题比另一道难。"},
+      {pt:"Ela é a melhor aluna da turma.", zh:"她是班里最好的学生。（不规则最高级）"},
+      {pt:"Estou muito cansado hoje.", zh:"我今天非常累。（muito 修饰形容词）"},
+      {pt:"A sopa está quente. Bebe com cuidado.", zh:"汤是热的（此刻）。小心喝。"},
+    ],
+    quiz:[
+      {q:"uma casa ___ (漂亮的, 阴性单数)", opts:["bonita","bonito","bonitos","bonitas"], a:"bonita", hint:"bonito: 阴单 → bonita"},
+      {q:"os livros ___ (大的, 阳性复数)", opts:["grandes","grande","granda","grandos"], a:"grandes", hint:"grande: 复数 → grandes（e 结尾加 s）"},
+      {q:"Ela é mais alta ___ eu. (比我高)", opts:["do que","como","que","de"], a:"do que", hint:"比较级用 mais...do que"},
+      {q:"É a ___ canção do álbum. (最好的)", opts:["melhor","maior","mais boa","boa"], a:"melhor", hint:"bom 的不规则最高级 = melhor"},
+      {q:"o filme ___ (葡萄牙的, 阳单)", opts:["português","portuguesa","portugueses","portugesa"], a:"português", hint:"português: 辅音结尾，阳单不变"},
+      {q:"as meninas ___ (聪明的, 阴复)", opts:["inteligentes","inteligente","inteligenta","inteligenta"], a:"inteligentes", hint:"inteligente: 复数 → inteligentes"},
+      {q:"Este livro é ___ do que aquele. (更便宜)", opts:["mais barato","menos caro","mais caro","baratíssimo"], a:"mais barato", hint:"优等比较：mais + adj + do que"},
+    ]
+  },
+
+  // ──────────────── 5. 代词 ────────────────
+  {
+    id:"pronouns", level:"A1", color:"#4a1c6e", icon:"👤",
+    title:"代词系统", sub:"Pronomes",
+    intro:"葡语代词分好几类：主格代词（谁做）、物主代词（谁的）、指示代词（哪个）、宾语代词（给谁/做给谁）。每类都有规律，分开学不乱。",
+    tip:"🧠 分步记忆：先记主格（eu/tu/ele...），再记物主（meu/teu/seu...），再记指示（este/esse/aquele），最后记宾语代词（me/te/o/a...）。",
+    confusion:"⚠️ 三大混淆点：① seu/sua 有歧义，可以是「你的/他的/她的」，不清楚时用 dele/dela；② este/esse/aquele 三档距离（中文只有这/那两档！）；③ 宾语代词的位置比较复杂，先记「放动词前面」这个基本规则。",
+    tables:[
+      {
+        title:"主格人称代词（主语）",
+        headers:["人称","葡语","中文","注意"],
+        rows:[
+          ["1单","eu","我","小写！"],
+          ["2单","tu","你","朋友/家人间用"],
+          ["3单","ele / ela","他 / 她",""],
+          ["正式2单","você","您","对陌生人/上级"],
+          ["1复","nós","我们",""],
+          ["2复","vocês","你们","口语常用"],
+          ["3复","eles / elas","他们 / 她们",""],
+        ]
+      },
+      {
+        title:"物主代词（需与所属名词性数一致）",
+        headers:["人称","阳单","阴单","阳复","阴复","中文"],
+        rows:[
+          ["eu","meu","minha","meus","minhas","我的"],
+          ["tu","teu","tua","teus","tuas","你的"],
+          ["ele/ela/você","seu","sua","seus","suas","他/她/您的 ⚠️"],
+          ["nós","nosso","nossa","nossos","nossas","我们的"],
+          ["eles/vocês","seu","sua","seus","suas","他们/你们的 ⚠️"],
+        ]
+      },
+      {
+        title:"指示代词（三档距离）",
+        headers:["距离","阳单","阴单","阳复","阴复","中性","中文"],
+        rows:[
+          ["🗣️ 近（我这里）","este","esta","estes","estas","isto","这个"],
+          ["👂 中（你那里）","esse","essa","esses","essas","isso","那个"],
+          ["🏔️ 远（两者都远）","aquele","aquela","aqueles","aquelas","aquilo","那个（远）"],
+        ]
+      },
+      {
+        title:"直接宾语代词（做什么的宾语）",
+        headers:["人称","代词","例句","中文"],
+        rows:[
+          ["eu","me","Ele vê-me. / Ele me vê.","他看见我"],
+          ["tu","te","Eu te amo.","我爱你"],
+          ["ele/ela","o / a","Eu vejo-o. / Eu vejo-a.","我看见他/她"],
+          ["nós","nos","Ele ajuda-nos.","他帮助我们"],
+          ["vocês","vos","Eu vos chamo.","我叫你们"],
+          ["eles/elas","os / as","Eu os conheço.","我认识他们"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Este livro é meu, não é teu.", zh:"这本书（我手边的）是我的，不是你的。"},
+      {pt:"Esse carro é dela, não é seu.", zh:"那辆车（你旁边的）是她的，不是他/她的。（dela更清楚）"},
+      {pt:"Eu te amo muito.", zh:"我非常爱你。（直接宾语 te 放前）"},
+      {pt:"Ele não me conhece.", zh:"他不认识我。（否定句，me 放前）"},
+      {pt:"Aquilo foi incrível!", zh:"那件事（过去发生的）真的太棒了！"},
+      {pt:"O nosso professor é muito bom.", zh:"我们的老师非常好。（nosso 阳单）"},
+    ],
+    quiz:[
+      {q:"___ livro aqui (这本, 离我近, 阳单)", opts:["este","esse","aquele","isto"], a:"este", hint:"离说话人近用 este"},
+      {q:"___ casa aí (那座, 离你近, 阴单)", opts:["essa","esta","aquela","isso"], a:"essa", hint:"离听话人近用 essa（阴单）"},
+      {q:"O ___ livro (我的书, eu, 阳单)", opts:["meu","minha","meus","teu"], a:"meu", hint:"eu + 阳单 = meu"},
+      {q:"A ___ casa (你的家, tu, 阴单)", opts:["tua","teu","sua","minha"], a:"tua", hint:"tu + 阴单 = tua"},
+      {q:"Eu ___ amo. (我爱你, te放哪?)", opts:["te","me","o","a"], a:"te", hint:"你 → 直接宾语 te"},
+      {q:"___ é feita de madeira. (那张桌子远处)", opts:["Aquela","Esta","Essa","Aquilo"], a:"Aquela", hint:"两者都远，阴单 → aquela"},
+      {q:"Livro dele = ?（他的书，避免歧义）", opts:["o livro dele","o seu livro","o livro seu","o seu dele"], a:"o livro dele", hint:"dele = de + ele，比 seu 更清楚表示「他的」"},
+      {q:"em + esse = ?", opts:["nesse","desse","neste","àquele"], a:"nesse", hint:"em + esse 缩合为 nesse"},
+    ]
+  },
+
+  // ──────────────── 6. 过去时 ────────────────
+  {
+    id:"past", level:"A2", color:"#1d5e8b", icon:"⏪",
+    title:"动词·过去时", sub:"Pretérito Perfeito & Imperfeito",
+    intro:"葡语有两种主要过去时：Perfeito（完成了的动作）和 Imperfeito（持续/习惯的动作）。这是A2最大的难点——中文没有这个区别！",
+    tip:"🧠 记忆口诀：Perfeito = Perfect = 完成了 → 「昨天我吃了」。Imperfeito = Imperfect = 未完成/持续 → 「小时候我常常吃」「那时候我正在吃」。",
+    confusion:"⚠️ 最大混淆：「昨天」不等于 Perfeito，「以前」不等于 Imperfeito！关键看动作是：✅完成了的单次动作 → Perfeito；✅过去习惯/持续/背景描述 → Imperfeito。例：Ontem chovia（昨天一直在下雨，背景）vs Ontem choveu（昨天下了雨，完成）。",
+    tables:[
+      {
+        title:"Pretérito Perfeito 变位（规则动词）",
+        headers:["人称","-AR  falar","-ER  comer","-IR  partir"],
+        rows:[
+          ["eu","falei","comi","parti"],
+          ["tu","falaste","comeste","partiste"],
+          ["ele/ela","falou","comeu","partiu"],
+          ["nós","falámos","comemos","partimos"],
+          ["vocês/eles","falaram","comeram","partiram"],
+        ]
+      },
+      {
+        title:"Pretérito Imperfeito 变位（规则动词）",
+        headers:["人称","-AR  falar","-ER  comer","-IR  partir"],
+        rows:[
+          ["eu","falava","comia","partia"],
+          ["tu","falavas","comias","partias"],
+          ["ele/ela","falava","comia","partia"],
+          ["nós","falávamos","comíamos","partíamos"],
+          ["vocês/eles","falavam","comiam","partiam"],
+        ]
+      },
+      {
+        title:"关键不规则 Perfeito（必背）",
+        headers:["动词","eu","tu","ele/ela","nós","vocês"],
+        rows:[
+          ["ser/ir","fui","foste","foi","fomos","foram"],
+          ["ter","tive","tiveste","teve","tivemos","tiveram"],
+          ["fazer","fiz","fizeste","fez","fizemos","fizeram"],
+          ["estar","estive","estiveste","esteve","estivemos","estiveram"],
+          ["vir","vim","vieste","veio","viemos","vieram"],
+          ["ver","vi","viste","viu","vimos","viram"],
+          ["dizer","disse","disseste","disse","dissemos","disseram"],
+          ["poder","pude","pudeste","pôde","pudemos","puderam"],
+        ]
+      },
+      {
+        title:"Perfeito vs Imperfeito 选择指南",
+        headers:["用 Perfeito ✅","用 Imperfeito ✅"],
+        rows:[
+          ["单次完成动作：Comi um bolo.","习惯动作：Comia pão todos os dias."],
+          ["有明确时间点：Cheguei às 3h.","持续状态：Estava cansado."],
+          ["事件序列：Levantei, vesti-me, saí.","背景描述：Chovia e estava frio."],
+          ["常与 ontem, já, de repente","常与 sempre, quando era criança"],
+        ],
+        twoCol:true
+      }
+    ],
+    examples:[
+      {pt:"Ontem comi uma pizza. (Perfeito)", zh:"昨天我吃了一个披萨。（完成的单次动作）"},
+      {pt:"Quando era criança, comia muito arroz. (Imperfeito)", zh:"小时候，我常常吃很多米饭。（过去习惯）"},
+      {pt:"Quando cheguei, ela já saiu. (P+P)", zh:"当我到达时，她已经走了。（两个完成动作）"},
+      {pt:"Estava a chover quando saí. (I+P)", zh:"我出门时，（外面）正在下雨。（背景+动作）"},
+      {pt:"Fui a Paris no ano passado.", zh:"去年我去了巴黎。（ser和ir的Perfeito一样！）"},
+      {pt:"Ela sempre dizia a verdade.", zh:"她总是说实话。（习惯/特征用 Imperfeito）"},
+    ],
+    quiz:[
+      {q:"Ontem eu ___ uma pizza. (comer, 完成动作)", opts:["comi","comia","como","comeu"], a:"comi", hint:"单次完成动作用 Perfeito：comer → comi"},
+      {q:"Quando era criança, eu ___ muito. (brincar, 习惯)", opts:["brincava","brinquei","brinco","brincou"], a:"brincava", hint:"童年习惯用 Imperfeito：brincar → brincava"},
+      {q:"Ele ___ ao trabalho de carro. (ir, 昨天去了)", opts:["foi","ia","vai","fui"], a:"foi", hint:"ir 的 Perfeito：ele → foi（不规则）"},
+      {q:"___ frio e chovia. (estar, 天气背景描述)", opts:["Estava","Esteve","Estou","Estava"], a:"Estava", hint:"背景描述用 Imperfeito：estar → estava"},
+      {q:"Eu ___ em Lisboa três anos. (viver, 住了三年)", opts:["vivi","vivia","vivo","viveu"], a:"vivi", hint:"明确完成的时间段用 Perfeito：viver → vivi"},
+      {q:"Ela ___ as notícias quando eu cheguei. (ver, 正在看)", opts:["via","viu","vê","visse"], a:"via", hint:"我进来时她正在看 → Imperfeito：ver → via"},
+      {q:"Nós ___ no mesmo hotel. (ficar, 上次住了)", opts:["ficámos","ficávamos","ficamos","fiquei"], a:"ficámos", hint:"完成动作，nós → ficámos（注意重音符！）"},
+      {q:"Eu ___ lá às 8h. (chegar, 8点到了)", opts:["cheguei","chegava","chego","chegou"], a:"cheguei", hint:"有明确时间点用 Perfeito：chegar → cheguei"},
+    ]
+  },
+
+  // ──────────────── 7. 将来时 ────────────────
+  {
+    id:"future", level:"A2", color:"#5c4033", icon:"⏩",
+    title:"动词·将来时", sub:"Futuro",
+    intro:"葡语表达将来有两种方式：① 口语最常用「ir + 不定式」（像英语 going to）；② 正式的「将来式」（词尾变化）。A1-A2 先掌握 ir + 不定式就够日常对话。",
+    tip:"🧠 简单记法：想说将来发生的事，就说「vou/vais/vai/vamos/vão + 动词原形」。就像中文的「我要去……」。正式将来时词尾：-ei/-ás/-á/-emos/-ão，加在不定式后面。",
+    confusion:"⚠️ 注意：① 口语中 ir+inf 非常常见，而正式将来式多用于书面语；② 「amanhã 明天」可以搭配两种都行；③ 条件式（-ia/-ias/-ia/-íamos/-iam）类似中文「会/应该」，也很实用。",
+    tables:[
+      {
+        title:"① 近将来（口语常用）：ir + 不定式",
+        headers:["人称","ir 变位","例子","中文"],
+        rows:[
+          ["eu","vou","Vou comer.", "我要去吃"],
+          ["tu","vais","Vais estudar?", "你要去学习吗？"],
+          ["ele/ela","vai","Ela vai viajar.", "她要去旅行"],
+          ["nós","vamos","Vamos sair!", "我们走吧！"],
+          ["vocês/eles","vão","Vão chegar tarde.", "他们要迟到了"],
+        ]
+      },
+      {
+        title:"② 简单将来式（正式/书面）",
+        headers:["人称","falar (-AR)","comer (-ER)","partir (-IR)","中文"],
+        rows:[
+          ["eu","falarei","comerei","partirei","我将……"],
+          ["tu","falarás","comerás","partirás","你将……"],
+          ["ele/ela","falará","comerá","partirá","他将……"],
+          ["nós","falaremos","comeremos","partiremos","我们将……"],
+          ["vocês/eles","falarão","comerão","partirão","他们将……"],
+        ]
+      },
+      {
+        title:"③ 条件式（表示「会/将会」）",
+        headers:["人称","词尾","例子","中文"],
+        rows:[
+          ["eu","-ia","Eu iria, mas...","我会去，但是……"],
+          ["tu","-ias","Tu gostarias?","你会喜欢吗？"],
+          ["ele/ela","-ia","Ela poderia ajudar.","她可以帮忙。"],
+          ["nós","-íamos","Nós faríamos isso.","我们会做那个。"],
+          ["vocês/eles","-iam","Eles comeriam.", "他们会吃。"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Amanhã vou ao médico.", zh:"明天我要去看医生。（ir + inf，口语）"},
+      {pt:"No próximo ano, vamos viajar para Portugal.", zh:"明年我们要去葡萄牙旅游。"},
+      {pt:"Se pudesse, iria a Paris.", zh:"如果可以，我会去巴黎。（条件式）"},
+      {pt:"O meeting será amanhã às 9h.", zh:"会议将在明天上午九点举行。（正式将来式）"},
+      {pt:"Vamos jantar juntos esta noite?", zh:"今晚我们一起吃晚饭好吗？（Vamos = 邀请）"},
+      {pt:"Gostaria de um café, por favor.", zh:"我想要一杯咖啡，谢谢。（条件式 = 有礼貌的请求）"},
+    ],
+    quiz:[
+      {q:"Amanhã eu ___ ao cinema. (ir+inf 口语将来)", opts:["vou ir","fui","vou","irei"], a:"vou ir", hint:"口语将来：vou + 动词原形"},
+      {q:"Ela ___ cedo amanhã. (chegar, 正式将来)", opts:["chegará","chegou","chega","vai chegar"], a:"chegará", hint:"正式将来式：chegar + á → chegará"},
+      {q:"Nós ___ ao parque. (ir, 口语将来，我们要去)", opts:["vamos ir","fomos","iremos","vamos"], a:"vamos ir", hint:"nós: vamos + 动词原形"},
+      {q:"___ de um copo de água, por favor. (礼貌请求)", opts:["Gostaria","Quero","Queria","Quero ter"], a:"Gostaria", hint:"条件式 gostar → gostaria，更有礼貌"},
+      {q:"Eles ___ às 3h. (chegar, 他们将在3点到达)", opts:["chegarão","chegaram","chegam","vão chegar"], a:"chegarão", hint:"正式将来：eles → chegarão"},
+    ]
+  },
+
+  // ──────────────── 8. 介词 ────────────────
+  {
+    id:"prepositions", level:"A1", color:"#2c5364", icon:"🔗",
+    title:"介词", sub:"Preposições",
+    intro:"葡语介词不多，但用法很关键。最常用的是 de、em、a、para、por、com、sem。介词经常和冠词缩合（如 de+o=do），必须熟悉。",
+    tip:"🧠 核心区分：para = 目的/方向（为了/去向）；por = 原因/经过/方式（因为/通过）。a = 时间点/方向（at/to）；em = 地点/时间段（in/at）。",
+    confusion:"⚠️ 最容易混淆：① para vs por（见下表）；② a vs em（去某地用 a，在某地用 em 或 no/na）；③ de 用途极多：出身/材料/属于/描述——遇到不确定的关系，先试试 de！",
+    tables:[
+      {
+        title:"核心介词速查",
+        headers:["介词","主要意思","例句","中文"],
+        rows:[
+          ["de","的/从/由/关于","Sou de Pequim. / Um copo de água.","我来自北京。/ 一杯水"],
+          ["em","在（里面）","Estou em casa. / em janeiro","在家。/ 在一月"],
+          ["a","去/在（点）","Vou a Lisboa. / às 3h","去里斯本。/ 在3点"],
+          ["para","去（目的地）/ 为了","Este livro é para ti.","这本书是给你的"],
+          ["por","因为/通过/为了（某人）","Obrigado por tudo.","谢谢你为一切"],
+          ["com","和/用","Café com leite","牛奶咖啡"],
+          ["sem","没有","Café sem açúcar","无糖咖啡"],
+          ["sobre","关于/在……上面","Um livro sobre Portugal","关于葡萄牙的书"],
+          ["entre","在……之间","entre 2 e 3 horas","在2到3小时之间"],
+          ["até","直到","Até amanhã!","明天见！（直到明天）"],
+        ]
+      },
+      {
+        title:"para vs por（最难区分！）",
+        headers:["para ➡️（方向/目的/受益人）","por 🔄（原因/交换/代理/经过）"],
+        rows:[
+          ["目的：Estudo para aprender.","原因：Obrigado por ajudar."],
+          ["方向/受益人：Isto é para ti.","代替某人：Fiz isto por ele."],
+          ["截止时间：Pronto para amanhã.","价格/交换：Paguei 10€ por isso."],
+          ["雇主：Trabalho para a empresa.","经过：Passei pelo parque."],
+        ],
+        twoCol:true
+      },
+      {
+        title:"介词 + 冠词 缩合完整表",
+        headers:["介词","+ o","+ a","+ os","+ as","+ um","+ uma"],
+        rows:[
+          ["de","do","da","dos","das","dum","duma"],
+          ["em","no","na","nos","nas","num","numa"],
+          ["a","ao","à","aos","às","—","—"],
+          ["por","pelo","pela","pelos","pelas","—","—"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Vou ao supermercado para comprar fruta.", zh:"我去超市买水果。（ao=a+o, para=目的）"},
+      {pt:"Obrigado por tudo o que fizeste.", zh:"谢谢你所做的一切。（por=因为/感谢的原因）"},
+      {pt:"Moro em Lisboa desde 2020.", zh:"我从2020年起住在里斯本。（em=在）"},
+      {pt:"Chegámos às três da tarde.", zh:"我们下午三点到达。（às=a+as, da=de+a）"},
+      {pt:"Este presente é para a minha mãe.", zh:"这份礼物是给我妈妈的。（para=给）"},
+      {pt:"Passámos pelo túnel.", zh:"我们经过了隧道。（pelo=por+o）"},
+    ],
+    quiz:[
+      {q:"Estou ___ casa. (在家)", opts:["em","a","para","de"], a:"em", hint:"在家：em casa（地点）"},
+      {q:"Vou ___ Lisboa. (去里斯本)", opts:["a","em","de","por"], a:"a", hint:"去某地：a（短暂目的地）"},
+      {q:"Este livro é ___ ti. (给你的)", opts:["para","por","de","em"], a:"para", hint:"给某人用 para"},
+      {q:"Obrigado ___ ajuda. (谢谢帮助)", opts:["pela","para a","com a","de"], a:"pela", hint:"谢谢某事用 por：por + a → pela"},
+      {q:"Um copo ___ água. (一杯水)", opts:["de","a","em","para"], a:"de", hint:"材料/内容用 de"},
+      {q:"Trabalhamos ___ 9h ___ 18h. (从9点到6点)", opts:["das...às","de...a","em...a","para...até"], a:"das...às", hint:"从...到: das (de+as) ... às (a+as)"},
+      {q:"por + o = ?", opts:["pelo","pelo","para","pol"], a:"pelo", hint:"por + o 缩合为 pelo"},
+    ]
+  },
+
+  // ──────────────── 9. 疑问句与否定 ────────────────
+  {
+    id:"questions", level:"A1", color:"#6b3a7d", icon:"❓",
+    title:"疑问句与否定", sub:"Perguntas e Negação",
+    intro:"葡语疑问句比中文简单：只需加疑问词，或把语调提高。否定句也很简单：在动词前加 não。但有几个疑问词容易混淆，需要特别注意。",
+    tip:"🧠 疑问词记忆：Quem（谁）= Who；O quê（什么）= What；Onde（哪里）= Where；Quando（什么时候）= When；Como（怎么）= How；Porquê（为什么）= Why；Quanto（多少）= How much/many。",
+    confusion:"⚠️ 注意：① porquê（疑问，为什么？）和 porque（回答，因为……）拼写不同！② qual/quais（哪一个/哪些）用于从几个中选择；③ 双重否定：Não vi ninguém.（我没看见任何人，注意不是「我没看见某人」）。",
+    tables:[
+      {
+        title:"疑问词速查",
+        headers:["葡语","英语对比","用法说明","例句"],
+        rows:[
+          ["quem","who","问人","Quem é ela?（她是谁？）"],
+          ["o quê / que","what","问事物","O que é isto?（这是什么？）"],
+          ["onde","where","问地点","Onde moras?（你住哪里？）"],
+          ["quando","when","问时间","Quando chegas?（你什么时候到？）"],
+          ["como","how","问方式/问候","Como estás?（你好吗？）"],
+          ["porquê","why","句尾或单独用","Porquê?（为什么？）"],
+          ["porque","because","回答原因","Porque tenho fome.（因为我饿了。）"],
+          ["quanto/a","how much","问数量","Quanto custa?（多少钱？）"],
+          ["qual / quais","which","从中选择","Qual preferes?（你更喜欢哪个？）"],
+        ]
+      },
+      {
+        title:"否定句结构",
+        headers:["结构","例句","中文"],
+        rows:[
+          ["não + 动词","Não falo inglês.","我不说英语。"],
+          ["não + 动词 + nada","Não comi nada.","我什么都没吃。"],
+          ["não + 动词 + ninguém","Não vi ninguém.","我没看见任何人。"],
+          ["não + 动词 + nunca","Não fui nunca lá.","我从未去过那里。"],
+          ["nunca + 动词（强调）","Nunca fui a Paris.","我从未去过巴黎。"],
+          ["não + 动词 + nem...nem","Não tenho nem cão nem gato.","我既没有狗也没有猫。"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Como te chamas? Chamo-me Ana.", zh:"你叫什么名字？我叫安娜。"},
+      {pt:"Onde é que moras? Moro em Xangai.", zh:"你住在哪里？我住在上海。"},
+      {pt:"Quanto custa este livro? Custa 15 euros.", zh:"这本书多少钱？15欧元。"},
+      {pt:"Não gosto de café. Prefiro chá.", zh:"我不喜欢咖啡，我更喜欢茶。"},
+      {pt:"Nunca estudei italiano.", zh:"我从来没学过意大利语。"},
+      {pt:"Porque estás triste? Porque perdi o emprego.", zh:"你为什么伤心？因为我丢了工作。（porquê疑问 → porque回答）"},
+    ],
+    quiz:[
+      {q:"___ é ela? (她是谁？)", opts:["Quem","Que","Onde","Como"], a:"Quem", hint:"问人用 Quem（= Who）"},
+      {q:"___ moras? (你住哪里？)", opts:["Onde","Quando","Como","Quem"], a:"Onde", hint:"问地点用 Onde（= Where）"},
+      {q:"___ custa? (多少钱？)", opts:["Quanto","Como","Qual","Que"], a:"Quanto", hint:"问价格/数量用 Quanto"},
+      {q:"Não vi ___ (没看见任何人)", opts:["ninguém","nada","nunca","nem"], a:"ninguém", hint:"没有人：ninguém"},
+      {q:"___ estás? (你好吗？问状态)", opts:["Como","Quando","Quem","Onde"], a:"Como", hint:"问候/状态用 Como（= How）"},
+      {q:"Não tenho ___ fome ___ sede. (既不饿也不渴)", opts:["nem...nem","não...não","nada...nada","ou...ou"], a:"nem...nem", hint:"既不…也不…：nem...nem"},
+      {q:"___ vens? (你什么时候来？)", opts:["Quando","Onde","Como","Quanto"], a:"Quando", hint:"问时间用 Quando（= When）"},
+      {q:"Porquê vs Porque: \"___ não vieste?\" (句尾用哪个？)", opts:["Porquê","Porque","Qual","Por que"], a:"Porquê", hint:"句尾单独疑问用 porquê；回答原因用 porque"},
+    ]
+  },
+
+  // ──────────────── 10. 数词与时间 ────────────────
+  {
+    id:"numbers", level:"A1", color:"#3d5a80", icon:"🔢",
+    title:"数词与时间", sub:"Números e Tempo",
+    intro:"数字是日常对话基础。葡语基数词规律性强，记住20以内后，其余都可以推导。时间、日期、星期的表达也有固定格式。",
+    tip:"🧠 规律：① 1-12 需要背；② 11-19 有词尾 -ze/onze/doze...；③ 20-99 是 vinte e um, vinte e dois...；④ 注意：1 和 2 有阴阳性（um/uma, dois/duas）。",
+    confusion:"⚠️ 注意：① 1/2 有性别：um homem / uma mulher；dois rapazes / duas raparigas；② 星期一是 segunda-feira（不是 primeira！）；③ 时间：é uma hora（用单数 é），são duas horas（用复数 são）。",
+    tables:[
+      {
+        title:"基数词 1-20",
+        headers:["数字","葡语","数字","葡语"],
+        rows:[
+          ["1","um / uma","11","onze"],
+          ["2","dois / duas","12","doze"],
+          ["3","três","13","treze"],
+          ["4","quatro","14","catorze"],
+          ["5","cinco","15","quinze"],
+          ["6","seis","16","dezasseis"],
+          ["7","sete","17","dezassete"],
+          ["8","oito","18","dezoito"],
+          ["9","nove","19","dezanove"],
+          ["10","dez","20","vinte"],
+        ]
+      },
+      {
+        title:"大数与规律",
+        headers:["数字","葡语","规律"],
+        rows:[
+          ["21","vinte e um","vinte + e + 个位"],
+          ["30","trinta",""],
+          ["40","quarenta",""],
+          ["50","cinquenta",""],
+          ["100","cem / cento","100整用cem, 101+用cento"],
+          ["200","duzentos/as","注意有性！"],
+          ["1000","mil",""],
+          ["1.000.000","um milhão",""],
+        ]
+      },
+      {
+        title:"时间表达",
+        headers:["中文","葡语"],
+        rows:[
+          ["现在几点？","Que horas são?"],
+          ["一点整","É uma hora.（单数用é）"],
+          ["两点整","São duas horas.（复数用são）"],
+          ["三点半","São três e meia."],
+          ["四点一刻","São quatro e um quarto."],
+          ["差十分五点","São cinco menos dez."],
+          ["上午/下午/晚上","da manhã / da tarde / da noite"],
+        ]
+      },
+      {
+        title:"星期与月份",
+        headers:["星期","葡语","月份","葡语"],
+        rows:[
+          ["周一","segunda-feira","一月","janeiro"],
+          ["周二","terça-feira","二月","fevereiro"],
+          ["周三","quarta-feira","三月","março"],
+          ["周四","quinta-feira","四月","abril"],
+          ["周五","sexta-feira","五月","maio"],
+          ["周六","sábado","六月","junho"],
+          ["周日","domingo","七月","julho"],
+          ["","","八月","agosto"],
+          ["","","九月","setembro"],
+          ["","","十月","outubro"],
+          ["","","十一月","novembro"],
+          ["","","十二月","dezembro"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Tenho vinte e cinco anos.", zh:"我二十五岁。"},
+      {pt:"São duas e meia da tarde.", zh:"下午两点半。"},
+      {pt:"O meu aniversário é no dia três de maio.", zh:"我的生日是五月三日。"},
+      {pt:"A loja abre às nove da manhã.", zh:"商店早上九点开门。"},
+      {pt:"Custa cento e cinquenta euros.", zh:"价格是一百五十欧元。"},
+      {pt:"Hoje é segunda-feira, oito de março.", zh:"今天是三月八日，星期一。"},
+    ],
+    quiz:[
+      {q:"15 用葡语说", opts:["quinze","quince","quinze","catorze"], a:"quinze", hint:"15 = quinze"},
+      {q:"Tenho ___ irmãos. (两个兄弟, 阳性)", opts:["dois","duas","dois","um"], a:"dois", hint:"2 的阳性 = dois（2兄弟，阳性）"},
+      {q:"___ duas horas. (两点了)", opts:["São","É","Estão","Estão"], a:"São", hint:"复数时间用 São，单数（uma hora）用 É"},
+      {q:"30 = ?", opts:["trinta","treinta","trina","tinta"], a:"trinta", hint:"30 = trinta"},
+      {q:"星期三 = ?", opts:["quarta-feira","quarta","quarenta","quinta-feira"], a:"quarta-feira", hint:"星期三 = quarta-feira（不是quarenta！）"},
+      {q:"100 整数单独用 =?", opts:["cem","cento","centro","cent"], a:"cem", hint:"100整数用 cem，101以上用 cento e..."},
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════════════════════════════
+//  SHARED COMPONENTS
+// ══════════════════════════════════════════════════════════════════════
+
+function LevelBadge({ level, small }) {
+  return (
+    <span style={{ background: LEVEL_COLOR[level]||"#888", color:"#fff", borderRadius:20, padding: small?"2px 7px":"3px 10px", fontSize: small?9:11, fontWeight:700, letterSpacing:0.5 }}>{level}</span>
+  );
+}
+
+// Renders one table based on its type
+function GrammarTable({ table }) {
+  if (table.twoCol) {
+    // Two-column comparison table
+    return (
+      <div style={{ marginBottom:20 }}>
+        <div style={{ fontWeight:700, fontSize:13, color:"#333", marginBottom:8 }}>{table.title}</div>
+        <div style={{ background:"#fff", borderRadius:12, overflow:"hidden", boxShadow:"0 2px 12px #0000000d" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr" }}>
+            {table.headers.map((h,i) => (
+              <div key={i} style={{ background:"#1a1a2e", color:"#f5e6c8", padding:"10px 14px", fontSize:12, fontWeight:700, borderRight:i===0?"1px solid rgba(255,255,255,0.15)":"none" }}>{h}</div>
+            ))}
+            {table.rows.map((row,ri) => (
+              row.map((cell,ci) => (
+                <div key={`${ri}-${ci}`} style={{ padding:"9px 14px", fontSize:13, color:"#333", background: ri%2===0?"#faf7f0":"#f3ede3", borderRight:ci===0?"1px solid #e8e0d0":"none", borderTop:"1px solid #ece6da", lineHeight:1.5 }}>{cell}</div>
+              ))
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Standard table
+  const isWide = table.wide;
+  return (
+    <div style={{ marginBottom:20 }}>
+      <div style={{ fontWeight:700, fontSize:13, color:"#333", marginBottom:8 }}>{table.title}</div>
+      <div style={{ background:"#fff", borderRadius:12, overflow:"hidden", boxShadow:"0 2px 12px #0000000d", overflowX:"auto" }}>
+        <table style={{ width:"100%", borderCollapse:"collapse", minWidth: isWide ? 500 : "auto" }}>
+          <thead>
+            <tr style={{ background:"#1a1a2e" }}>
+              {table.headers.map((h,i) => (
+                <th key={i} style={{ padding:"9px 12px", textAlign:"left", fontSize:11, fontWeight:700, color:"#f5e6c8", borderRight:i<table.headers.length-1?"1px solid rgba(255,255,255,0.15)":"none", whiteSpace:"nowrap" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row,ri) => (
+              <tr key={ri} style={{ background: ri%2===0?"#faf7f0":"#f3ede3" }}>
+                {row.map((cell,ci) => {
+                  const isFirst = ci===0;
+                  const val = typeof cell === "object" ? (cell.word || cell.ex || cell.zh || cell) : cell;
+                  return (
+                    <td key={ci} style={{ padding:"8px 12px", fontWeight: isFirst?700:typeof cell==="object"&&cell.word?600:400, color: isFirst?"#5c4033": typeof cell==="object"&&cell.word?"#1d3557":"#444", fontSize: typeof cell==="object"&&cell.word?15:13, borderRight:ci<row.length-1?"1px solid #e8e0d0":"none", verticalAlign:"top", lineHeight:1.5 }}>
+                      {typeof cell === "object" ? (
+                        <>
+                          {cell.word && <span style={{ fontWeight:700, color:"#1a1a2e" }}>{cell.word}</span>}
+                          {cell.ex && <span style={{ display:"block", fontSize:11, color:"#888", fontStyle:"italic", marginTop:1 }}>{cell.ex}</span>}
+                          {!cell.word && cell.zh && <span>{cell.zh}</span>}
+                        </>
+                      ) : val}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ── Reference View ──
+function ReferenceView({ unit, isMobile }) {
+  const pad = isMobile ? "16px 14px" : "24px 32px";
+  return (
+    <div style={{ height:"100%", overflowY:"auto", padding:pad }}>
+      {/* Header */}
+      <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10, flexWrap:"wrap" }}>
+        <span style={{ fontSize:isMobile?28:36 }}>{unit.icon}</span>
+        <div>
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <span style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?22:28, fontWeight:700, color:unit.color }}>{unit.title}</span>
+            <LevelBadge level={unit.level} />
+          </div>
+          <div style={{ fontSize:12, color:"#999" }}>{unit.sub}</div>
+        </div>
+      </div>
+
+      {/* Intro */}
+      <div style={{ background:unit.color+"12", border:`1px solid ${unit.color}25`, borderRadius:10, padding:"12px 16px", marginBottom:16, fontSize:13, color:"#333", lineHeight:1.7 }}>{unit.intro}</div>
+
+      {/* Memory tip */}
+      <div style={{ background:"#fffbea", border:"1px solid #f0d060", borderRadius:10, padding:"10px 16px", marginBottom:16, fontSize:13, color:"#5a4800", lineHeight:1.7 }}>{unit.tip}</div>
+
+      {/* Confusion warning */}
+      <div style={{ background:"#fff5f5", border:"1px solid #fca5a5", borderRadius:10, padding:"10px 16px", marginBottom:20, fontSize:13, color:"#7f1d1d", lineHeight:1.7 }}>{unit.confusion}</div>
+
+      {/* Tables */}
+      {unit.tables.map((t,i) => <GrammarTable key={i} table={t} />)}
+
+      {/* Examples */}
+      <div style={{ marginBottom:20 }}>
+        <div style={{ fontWeight:700, fontSize:13, color:unit.color, marginBottom:10 }}>📝 例句 Exemplos</div>
+        <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+          {unit.examples.map((ex,i) => (
+            <div key={i} style={{ background:"#fff", borderRadius:10, padding:"11px 14px", boxShadow:"0 1px 8px #0000000a", borderLeft:`3px solid ${unit.color}` }}>
+              <div style={{ fontSize:14, color:"#1a1a2e", fontWeight:600, marginBottom:3 }}>{ex.pt}</div>
+              <div style={{ fontSize:12, color:"#777" }}>{ex.zh}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Quiz View (Multiple Choice) ──
+function QuizView({ unit, onDone, isMobile }) {
+  const [questions] = useState(() => shuffle(unit.quiz));
+  const [idx, setIdx] = useState(0);
+  const [chosen, setChosen] = useState(null);
+  const [score, setScore] = useState({ c:0, w:0 });
+  const [showHint, setShowHint] = useState(false);
+
+  if (idx >= questions.length) {
+    const pct = Math.round(score.c / questions.length * 100);
+    return (
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", height:"100%", gap:16, padding:"0 20px" }}>
+        <div style={{ fontSize:isMobile?52:72 }}>{ pct>=80?"🏆":pct>=60?"👍":"📚" }</div>
+        <div style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?26:32, color:"#1a1a2e" }}>练习完成！</div>
+        <div style={{ fontSize:15, color:"#666" }}>✓ {score.c} 正确 · ✗ {score.w} 错误</div>
+        <div style={{ background:"#fff", borderRadius:12, padding:"12px 28px", fontSize:15, fontWeight:700, color: pct>=80?"#2d6a4f":"#7a3b1e" }}>{pct}% 正确率</div>
+        <div style={{ fontSize:13, color:"#888", textAlign:"center", maxWidth:360 }}>
+          { pct>=80 ? "非常棒！继续保持 🎉" : pct>=60 ? "不错，再多练几次就能记住了！" : "多看看参考表，再来一次吧！"}
+        </div>
+        <div style={{ display:"flex", gap:12, marginTop:8, flexWrap:"wrap", justifyContent:"center" }}>
+          <button onClick={onDone} style={{ background:"#888", color:"#fff", border:"none", borderRadius:12, padding:"10px 24px", fontSize:14 }}>返回</button>
+          <button onClick={() => { setIdx(0); setChosen(null); setScore({c:0,w:0}); setShowHint(false); }} style={{ background:"#1a1a2e", color:"#fff", border:"none", borderRadius:12, padding:"10px 24px", fontSize:14 }}>再练一次</button>
+        </div>
+      </div>
+    );
+  }
+
+  const q = questions[idx];
+  const isCorrect = chosen === q.a;
+
+  const next = () => { setIdx(i=>i+1); setChosen(null); setShowHint(false); };
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", height:"100%", gap:isMobile?14:20, padding: isMobile?"0 14px":"0 40px" }}>
+      {/* Progress */}
+      <div style={{ width:"100%", maxWidth:600 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, color:"#888", marginBottom:6 }}>
+          <span>{idx+1} / {questions.length}</span>
+          <span><span style={{ color:"#2d6a4f" }}>✓{score.c}</span> &nbsp; <span style={{ color:"#8b1a1a" }}>✗{score.w}</span></span>
+        </div>
+        <div style={{ height:4, background:"#ddd", borderRadius:4 }}>
+          <div style={{ height:"100%", width:`${idx/questions.length*100}%`, background:unit.color, borderRadius:4, transition:"width 0.4s" }} />
+        </div>
+      </div>
+
+      {/* Question card */}
+      <div style={{ width:"100%", maxWidth:600, background:`linear-gradient(135deg, ${unit.color}, ${unit.color}bb)`, color:"#fff", borderRadius:20, padding: isMobile?"22px 18px":"32px 40px", textAlign:"center", boxShadow:`0 16px 48px ${unit.color}44` }}>
+        <div style={{ fontSize:10, opacity:.55, letterSpacing:2, marginBottom:10, textTransform:"uppercase" }}>选择正确答案</div>
+        <div style={{ fontSize: isMobile?18:22, fontWeight:700, lineHeight:1.5 }}>{q.q}</div>
+      </div>
+
+      {/* Options */}
+      <div style={{ width:"100%", maxWidth:600, display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+        {q.opts.map((opt,i) => {
+          let bg = "#fff", border = "2px solid #e0d8cc", color = "#333", fw = 400;
+          if (chosen) {
+            if (opt === q.a) { bg="#e8f5e9"; border="2px solid #2d6a4f"; color="#1a5c2e"; fw=700; }
+            else if (opt === chosen) { bg="#fdecea"; border="2px solid #8b1a1a"; color="#5c1010"; }
+          } else if (chosen === null) {
+            // nothing
+          }
+          return (
+            <button key={i} onClick={() => { if(!chosen){ setChosen(opt); setScore(s=>({...s,[opt===q.a?"c":"w"]:s[opt===q.a?"c":"w"]+1})); } }} style={{ background:bg, border, color, fontWeight:fw, borderRadius:14, padding: isMobile?"12px 10px":"14px 16px", fontSize:isMobile?14:16, textAlign:"center", transition:"all .15s", boxShadow:"0 2px 10px #0000000d" }}>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Feedback & hint */}
+      {chosen && (
+        <div style={{ textAlign:"center" }}>
+          {isCorrect
+            ? <div style={{ color:"#2d6a4f", fontWeight:700, fontSize:16, marginBottom:8 }}>✓ 正确！</div>
+            : <div style={{ marginBottom:8 }}>
+                <div style={{ color:"#8b1a1a", fontWeight:700, fontSize:16 }}>✗ 正确答案：<em>{q.a}</em></div>
+                <div style={{ fontSize:12, color:"#888", marginTop:4 }}>💡 {q.hint}</div>
+              </div>
+          }
+          <button onClick={next} style={{ background:"#1a1a2e", color:"#fff", border:"none", borderRadius:12, padding:"11px 36px", fontSize:14 }}>下一题 →</button>
+        </div>
+      )}
+
+      {!chosen && (
+        <button onClick={()=>setShowHint(s=>!s)} style={{ background:"transparent", border:"1px solid #ccc", color:"#888", borderRadius:10, padding:"6px 16px", fontSize:12 }}>
+          {showHint?"隐藏提示":"💡 提示"}
+        </button>
+      )}
+      {showHint && !chosen && (
+        <div style={{ background:"#fffbea", border:"1px solid #f0d060", borderRadius:10, padding:"9px 18px", fontSize:13, color:"#6b5a00", maxWidth:600, textAlign:"center" }}>💡 {q.hint}</div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  MAIN APP
+// ══════════════════════════════════════════════════════════════════════
+function App() {
+  const w = useW();
+  const isMobile = w < 640;
+  const isTablet = w >= 640 && w < 1024;
+  const SIDEBAR_W = isMobile ? 270 : isTablet ? 200 : 230;
+
+  const [page, setPage] = useState("home"); // "home" | unitId+"_ref" | unitId+"_quiz"
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navTo = (p) => { setPage(p); if(isMobile) setSidebarOpen(false); };
+
+  const currentUnitId = page.replace(/_ref|_quiz/,"");
+  const currentUnit = UNITS.find(u=>u.id===currentUnitId);
+  const isRef = page.endsWith("_ref");
+  const isQuiz = page.endsWith("_quiz");
+
+  // ── Sidebar ──
+  const Sidebar = () => (
+    <div style={{ width:SIDEBAR_W, height:"100%", background:"linear-gradient(180deg,#1a1a2e,#16213e)", display:"flex", flexDirection:"column", borderRight:"1px solid #2d2d50", overflowY:"auto" }}>
+      <div style={{ padding:"18px 16px 12px", borderBottom:"1px solid #2d2d5044", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div>
+          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:14, color:"#f5e6c8", fontWeight:700, lineHeight:1.4 }}>葡语语法全览</div>
+          <div style={{ fontSize:10, color:"#f5e6c855", marginTop:2 }}>Gramática Portuguesa A1–B1</div>
+        </div>
+        {isMobile && <button onClick={()=>setSidebarOpen(false)} style={{ background:"transparent", border:"none", color:"#f5e6c870", fontSize:20, lineHeight:1 }}>✕</button>}
+      </div>
+
+      <div style={{ padding:"8px 8px", display:"flex", flexDirection:"column", gap:2 }}>
+        <button onClick={()=>navTo("home")} style={{ display:"flex", alignItems:"center", gap:8, padding:"9px 10px", borderRadius:10, border:"none", background:page==="home"?"#f5e6c815":"transparent", color:page==="home"?"#f5e6c8":"#f5e6c870", fontSize:12, fontWeight:page==="home"?700:400, borderLeft:page==="home"?"3px solid #c8a96e":"3px solid transparent", textAlign:"left" }}>
+          <span>⊞</span><span>主页</span>
+        </button>
+      </div>
+
+      <div style={{ padding:"0 10px" }}>
+        {["A1","A2"].map(level => (
+          <div key={level}>
+            <div style={{ fontSize:9, color:"#f5e6c840", letterSpacing:2, textTransform:"uppercase", margin:"10px 4px 5px", display:"flex", alignItems:"center", gap:6 }}>
+              <span style={{ background:LEVEL_COLOR[level], borderRadius:3, padding:"1px 5px", color:"#fff", fontSize:8 }}>{level}</span>
+              <span>初级</span>
+            </div>
+            {UNITS.filter(u=>u.level===level).map(u => {
+              const active = page.startsWith(u.id);
+              return (
+                <div key={u.id} style={{ marginBottom:3 }}>
+                  <button onClick={()=>navTo(u.id+"_ref")} style={{ display:"flex", alignItems:"center", gap:7, width:"100%", padding:"8px 10px", borderRadius:9, border:"none", background:active?"#f5e6c818":"transparent", color:active?"#f5e6c8":"#f5e6c870", fontSize:12, fontWeight:active?700:400, borderLeft:active?"3px solid #c8a96e":"3px solid transparent", textAlign:"left" }}>
+                    <span style={{ fontSize:14 }}>{u.icon}</span>
+                    <span style={{ flex:1 }}>{u.title}</span>
+                  </button>
+                  {active && (
+                    <div style={{ display:"flex", gap:4, paddingLeft:28, marginTop:3 }}>
+                      {[["_ref","📖参考"],["_quiz","✏️练习"]].map(([suffix,label])=>(
+                        <button key={suffix} onClick={()=>navTo(u.id+suffix)} style={{ flex:1, padding:"4px 6px", borderRadius:7, border:"none", background:page===u.id+suffix?"#c8a96e":"#f5e6c812", color:page===u.id+suffix?"#1a1a2e":"#f5e6c870", fontSize:10, fontWeight:700 }}>{label}</button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ flex:1 }} />
+      <div style={{ padding:"10px 12px", borderTop:"1px solid #2d2d5044", fontSize:9, color:"#f5e6c830", lineHeight:1.6 }}>
+        10 个语法单元 · {UNITS.reduce((s,u)=>s+u.quiz.length,0)} 道练习题
+      </div>
+    </div>
+  );
+
+  // ── Home ──
+  const HomeView = () => (
+    <div style={{ height:"100%", overflowY:"auto", padding: isMobile?"16px 14px": isTablet?"24px 24px":"32px 40px" }}>
+      <div style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?22:30, color:"#1a1a2e", marginBottom:4 }}>葡语语法全览 👋</div>
+      <div style={{ fontSize:13, color:"#888", marginBottom:8 }}>Gramática Portuguesa · A1–A2 完整学习</div>
+      <div style={{ background:"#fff", borderRadius:12, padding:"12px 18px", fontSize:13, color:"#555", lineHeight:1.8, marginBottom:28, maxWidth:640, boxShadow:"0 2px 10px #0000000a" }}>
+        📌 建议学习路径：<strong>名词与冠词 → Ser/Estar → 动词现在时 → 形容词 → 代词 → 过去时 → 其余</strong><br/>
+        每个单元先看「参考表」，再做「多选练习」，遇到不懂回头查表。
+      </div>
+
+      <div style={{ display:"grid", gridTemplateColumns: isMobile?"1fr":isTablet?"1fr 1fr":"repeat(3,1fr)", gap:14, marginBottom:28 }}>
+        {UNITS.map(u => (
+          <button key={u.id} className="card-h" onClick={()=>navTo(u.id+"_ref")} style={{ background:`linear-gradient(135deg,${u.color},${u.color}cc)`, color:"#fff", border:"none", borderRadius:16, padding: isMobile?"16px 14px":"22px 18px", textAlign:"left", cursor:"pointer", boxShadow:`0 6px 20px ${u.color}33` }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
+              <span style={{ fontSize:isMobile?22:26 }}>{u.icon}</span>
+              <LevelBadge level={u.level} small />
+            </div>
+            <div style={{ fontSize:isMobile?14:16, fontWeight:700, marginBottom:3 }}>{u.title}</div>
+            <div style={{ fontSize:11, opacity:.7, marginBottom:6 }}>{u.sub}</div>
+            <div style={{ fontSize:11, opacity:.6, lineHeight:1.5 }}>{u.quiz.length} 道练习题</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Quick tips */}
+      <div style={{ background:"#fff", borderRadius:14, padding:"18px 20px", boxShadow:"0 2px 16px #0000000d", maxWidth:740, marginBottom:20 }}>
+        <div style={{ fontSize:13, fontWeight:700, color:"#5c4033", marginBottom:12 }}>🔑 中文母语者最难的 5 个点</div>
+        {[
+          ["1", "ser vs estar", "两个「是」——身份用ser，状态用estar。中文只有一个，葡语必须选！"],
+          ["2", "名词性别", "每个名词都有阴/阳性，形容词和冠词都要跟着变。词尾 -o/-a 是最常见规律。"],
+          ["3", "动词变位", "每个人称都不同！先背 eu/tu/ele/nós/vocês 五个人称的变位。"],
+          ["4", "介词缩合", "de+o=do，em+a=na，a+o=ao…… 这些缩合必须自动反应！"],
+          ["5", "este/esse/aquele", "三档距离：近我/近你/远两者。中文只有这/那两档。"],
+        ].map(([n,title,desc])=>(
+          <div key={n} style={{ display:"flex", gap:10, padding:"8px 0", borderBottom:"1px solid #f0ebe0" }}>
+            <span style={{ width:22, height:22, borderRadius:"50%", background:"#1a1a2e", color:"#f5e6c8", fontSize:11, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:1 }}>{n}</span>
+            <div>
+              <span style={{ fontWeight:700, fontSize:13, color:"#1a1a2e" }}>{title}</span>
+              <span style={{ fontSize:12, color:"#777", marginLeft:8 }}>{desc}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ display:"flex", flexDirection:isMobile?"column":"row", height:"100dvh", overflow:"hidden" }}>
+      {/* Mobile topbar */}
+      {isMobile && (
+        <div style={{ display:"flex", alignItems:"center", padding:"0 14px", height:50, background:"#1a1a2e", borderBottom:"1px solid #2d2d50", flexShrink:0 }}>
+          <button onClick={()=>setSidebarOpen(true)} style={{ background:"transparent", border:"none", color:"#f5e6c8", fontSize:22, marginRight:10 }}>☰</button>
+          <div style={{ fontFamily:"'Playfair Display',serif", color:"#f5e6c8", fontSize:16, fontWeight:700 }}>
+            {page==="home" ? "葡语语法全览" : currentUnit?.title || ""}
+          </div>
+          {currentUnit && (
+            <div style={{ marginLeft:"auto", display:"flex", gap:6 }}>
+              {[["_ref","📖"],["_quiz","✏️"]].map(([suffix,label])=>(
+                <button key={suffix} onClick={()=>navTo(currentUnitId+suffix)} style={{ background:page===currentUnitId+suffix?"#c8a96e":"transparent", border:"1px solid #f5e6c830", borderRadius:8, padding:"4px 8px", color:"#f5e6c8", fontSize:11 }}>{label}</button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Sidebar overlay */}
+      {isMobile && sidebarOpen && (
+        <div onClick={()=>setSidebarOpen(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:200 }} />
+      )}
+
+      {/* Sidebar */}
+      <div className="sidebar-drawer" style={{ ...(isMobile?{position:"fixed",top:0,left:0,height:"100%",zIndex:300,transform:sidebarOpen?"translateX(0)":"translateX(-100%)"}:{flexShrink:0,height:"100%"}), width:SIDEBAR_W }}>
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div style={{ flex:1, overflow:"hidden", background:"#f5f0e8" }}>
+        {page==="home" && <HomeView />}
+        {currentUnit && isRef && <ReferenceView unit={currentUnit} isMobile={isMobile} />}
+        {currentUnit && isQuiz && <QuizView unit={currentUnit} onDone={()=>navTo(currentUnitId+"_ref")} isMobile={isMobile} />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
