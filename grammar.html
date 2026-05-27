@@ -750,6 +750,243 @@ const UNITS = [
       {q:"100 整数单独用 =?", opts:["cem","cento","centro","cent"], a:"cem", hint:"100整数用 cem，101以上用 cento e..."},
     ]
   },
+
+  // ──────────────── 11. 反身动词 ────────────────
+  {
+    id:"reflexive", level:"A1", color:"#b5451b", icon:"🔄",
+    title:"反身动词", sub:"Verbos Reflexos",
+    intro:"反身动词表示「动作施于自身」——「我叫……」「我起床」「我洗手」。葡语用反身代词 me/te/se/nos/se 来表达，代词必须和主语对应。中文完全没有这个概念，所以初学者常常忘加代词。",
+    tip:"🧠 口诀：反身代词像「影子」，总跟着主语走：eu→me，tu→te，ele/ela/você→se，nós→nos，eles/vocês→se。肯定句代词紧跟动词后（连字符 Chamo-me），否定/疑问句代词前移（Não me chamo）。",
+    confusion:"⚠️ 三大陷阱：① 忘加代词——不能说 *Chamo Maria*，要说 Chamo-me Maria；② 有些动词加 se 意思会变（lembrar=提醒别人，lembrar-se=自己记得）；③ 肯定句代词后置：Chamo-me，否定句代词前置：Não me chamo。",
+    tables:[
+      {
+        title:"反身代词总表",
+        headers:["人称","反身代词","例子","中文"],
+        rows:[
+          ["eu","me","Chamo-me Ana.","我叫安娜。"],
+          ["tu","te","Como te chamas?","你叫什么名字？"],
+          ["ele / ela / você","se","Ela chama-se Maria.","她叫玛丽亚。"],
+          ["nós","nos","Levantamo-nos cedo.","我们早起。"],
+          ["eles / vocês","se","Sentam-se aqui.","他们坐在这里。"],
+        ]
+      },
+      {
+        title:"最常用反身动词",
+        headers:["动词","中文","例句","注意"],
+        rows:[
+          ["chamar-se","叫……名字","Chamo-me João.","自我介绍必备"],
+          ["levantar-se","起床","Levanto-me às 7h.","levantar（不加se）=抬起别人"],
+          ["sentar-se","坐下","Sente-se, por favor.","请坐（礼貌用语）"],
+          ["deitar-se","躺下/去睡","Deito-me às 23h.",""],
+          ["vestir-se","穿衣","Visto-me rapidamente.","vestir（不加se）=给别人穿"],
+          ["lavar-se","洗（自己）","Lavo-me de manhã.","lavar（不加se）=洗东西"],
+          ["divertir-se","玩得开心","Divirtam-se!","常见祝福语"],
+          ["lembrar-se","记得","Não me lembro.","lembrar（不加se）=提醒别人"],
+          ["esquecer-se","忘记","Esqueci-me das chaves.","esquecer（不加se）=使人忘记"],
+        ],
+        wide:true
+      },
+      {
+        title:"代词位置规则",
+        headers:["句型","代词位置","例子"],
+        rows:[
+          ["肯定陈述句","动词-代词（连字符）","Chamo-me Ana."],
+          ["否定句","代词 + 动词","Não me chamo Ana."],
+          ["疑问句","代词前置","Como se chama?"],
+          ["含 nunca / já 等词","代词前置","Nunca me esqueço."],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Chamo-me Li Wei. Sou chinês.", zh:"我叫李伟。我是中国人。"},
+      {pt:"Como se chama? — Chamo-me Carlos.", zh:"您叫什么名字？——我叫卡洛斯。"},
+      {pt:"Levanto-me às seis e meia da manhã.", zh:"我早上六点半起床。"},
+      {pt:"Eles divertiram-se muito na festa.", zh:"他们在派对上玩得很开心。"},
+      {pt:"Não me lembro do número de telefone.", zh:"我不记得电话号码了。"},
+      {pt:"Senta-te aqui, por favor.", zh:"请坐这里。（tu 命令式）"},
+    ],
+    quiz:[
+      {q:"我叫玛丽亚。Chamo-___ Maria.", opts:["me","te","se","nos"], a:"me", hint:"eu → 反身代词 me"},
+      {q:"你叫什么？Como ___ chamas?", opts:["te","me","se","nos"], a:"te", hint:"tu → 反身代词 te，否定/疑问句前置"},
+      {q:"她叫安娜。Ela chama-___ Ana.", opts:["se","me","te","nos"], a:"se", hint:"ela → 反身代词 se"},
+      {q:"我不记得了。Não ___ lembro.", opts:["me","te","se","nos"], a:"me", hint:"否定句代词前置；eu → me"},
+      {q:"下列哪个句子正确？", opts:["Chamo-me João.","Me chamo João.","Chamo João.","João-me chamo."], a:"Chamo-me João.", hint:"肯定陈述句：动词-代词（连字符）"},
+      {q:"levantar-se 的意思是？", opts:["起床/站起来","抬起别人","出发离开","走路"], a:"起床/站起来", hint:"levantar-se = 自己站起来/起床"},
+      {q:"我们玩得很开心。Nós divertimo-___ muito.", opts:["nos","me","te","se"], a:"nos", hint:"nós → 反身代词 nos"},
+    ]
+  },
+
+  // ──────────────── 12. 动词搭配·不定式 ────────────────
+  {
+    id:"infinitive", level:"A1", color:"#166b6b", icon:"🔗",
+    title:"动词搭配·不定式", sub:"Verbo + Infinitivo",
+    intro:"葡语有很多「动词 + 动词」的固定搭配，第二个动词用不定式（原形，不变化）。这些结构是表达「想/要/能/得/刚/开始/停止」的核心句型，A1 必须掌握。好消息是：不定式永远不变位，用起来很轻松！",
+    tip:"🧠 记忆框架：把这些搭配想成「功能键」——ir（要去做）、querer（想做）、poder（能做）、ter de（必须做）、acabar de（刚做完）、começar a（开始做）。只记住第一个动词的变位，后面一律接原形。",
+    confusion:"⚠️ 注意：① ir + inf 表「近将来」（马上/今天要做），不是简单将来时；② acabar de + inf 表「刚刚」做完，注意用现在时（Acabo de chegar = 我刚到）；③ começar a、gostar de、precisar de 后的介词不能省；④ ter de 和 ter que 意思相同，欧葡更常用 ter de。",
+    tables:[
+      {
+        title:"核心「动词 + 不定式」搭配",
+        headers:["结构","意思","例子","中文"],
+        rows:[
+          ["ir + inf","将要/要去做","Vou comer agora.","我现在要吃饭了。"],
+          ["querer + inf","想做","Quero aprender português.","我想学葡萄牙语。"],
+          ["poder + inf","能/可以做","Podes ajudar-me?","你能帮我吗？"],
+          ["dever + inf","应该做","Deves estudar mais.","你应该多学习。"],
+          ["ter de + inf","必须做","Tenho de trabalhar amanhã.","我明天必须上班。"],
+          ["precisar de + inf","需要做","Precisas de descansar.","你需要休息。"],
+          ["conseguir + inf","成功做到","Consegui falar português!","我学会说葡语了！"],
+          ["saber + inf","会/懂得","Sabes nadar?","你会游泳吗？"],
+          ["começar a + inf","开始做","Começo a entender.","我开始听懂了。"],
+          ["acabar de + inf","刚刚做完","Acabo de chegar.","我刚到。"],
+          ["deixar de + inf","停止/不再做","Deixei de fumar.","我戒烟了。"],
+          ["gostar de + inf","喜欢做","Gosto de cozinhar.","我喜欢做饭。"],
+        ],
+        wide:true
+      },
+      {
+        title:"ir + inf 近将来（5个人称）",
+        headers:["人称","ir 变位","完整例句","中文"],
+        rows:[
+          ["eu","Vou","Vou jantar fora.","我要出去吃晚饭。"],
+          ["tu","Vais","Vais estudar esta noite?","你今晚要学习吗？"],
+          ["ele/ela","Vai","Ela vai ligar mais tarde.","她稍后会打电话。"],
+          ["nós","Vamos","Vamos sair às 8h.","我们八点出发。"],
+          ["eles/elas","Vão","Vão chegar amanhã.","他们明天到。"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"Vou ao supermercado comprar leite.", zh:"我要去超市买牛奶。（ir + inf）"},
+      {pt:"Quero visitar Lisboa no próximo verão.", zh:"我想明年夏天去里斯本。（querer + inf）"},
+      {pt:"Tens de entregar o trabalho amanhã.", zh:"你明天必须交作业。（ter de + inf）"},
+      {pt:"Acabei de jantar. Estou cheio.", zh:"我刚吃完饭，撑了。（acabar de + inf）"},
+      {pt:"Consegues falar mais devagar?", zh:"你能说慢一点吗？（conseguir + inf）"},
+      {pt:"Deixámos de ver televisão à noite.", zh:"我们晚上不再看电视了。（deixar de + inf）"},
+    ],
+    quiz:[
+      {q:"我想喝水。Quero ___ água.", opts:["beber","bebo","beba","bebendo"], a:"beber", hint:"querer + 不定式原形 beber"},
+      {q:"我们今晚要去电影院。Vamos ___ ao cinema esta noite.", opts:["ir","vamos","imos","iremos"], a:"ir", hint:"vamos（ir变位）+ 不定式 ir = 要去"},
+      {q:"你必须睡觉了。Tens de ___.", opts:["dormir","dorme","dormindo","dormiu"], a:"dormir", hint:"ter de + 不定式 dormir"},
+      {q:"我刚到。Acabo ___ chegar.", opts:["de","a","em","por"], a:"de", hint:"acabar de + inf 表「刚刚」，介词是 de"},
+      {q:"他会游泳。Ele sabe ___.", opts:["nadar","nada","nadando","nadou"], a:"nadar", hint:"saber + 不定式（会做某事）"},
+      {q:"我开始理解了。Começo ___ entender.", opts:["a","de","em","por"], a:"a", hint:"começar a + inf，介词是 a"},
+      {q:"下列哪个表达「我刚吃完」？", opts:["Acabo de comer.","Começo a comer.","Vou comer.","Quero comer."], a:"Acabo de comer.", hint:"acabar de + inf = 刚刚做完"},
+    ]
+  },
+
+  // ──────────────── 13. 进行时 ────────────────
+  {
+    id:"progressive", level:"A1", color:"#3d6b1a", icon:"▶️",
+    title:"进行时", sub:"Presente Contínuo",
+    intro:"葡语用「estar a + 不定式」表示「正在做……」，强调动作此刻正在进行。这是欧式葡语（Portugal）的标准用法，与巴西葡语不同。只需记住 estar 的变位，后面 a + 动词原形就好。",
+    tip:"🧠 记忆公式：ESTAR（变位）+ a + 动词原形。只有 estar 会变，a 和后面的动词永远不变。比较：Estou a comer（正在吃）vs Como（（习惯上）吃）。",
+    confusion:"⚠️ 欧葡 vs 巴西葡：欧葡用 estar a + 不定式（Estou a comer）；巴西葡用 estar + 现在分词（Estou comendo）。两种都能听懂，但学欧葡请用前者，不要混用 -ndo 形式。另外：进行时通常不用于 ser 本身（不说 *estou a ser*）。",
+    tables:[
+      {
+        title:"estar a + 不定式 — 完整变位",
+        headers:["人称","estar","结构","例子"],
+        rows:[
+          ["eu","Estou","Estou a + inf","Estou a estudar.（我正在学习）"],
+          ["tu","Estás","Estás a + inf","Estás a ouvir música?（你在听音乐吗？）"],
+          ["ele/ela","Está","Está a + inf","Ela está a dormir.（她正在睡觉）"],
+          ["nós","Estamos","Estamos a + inf","Estamos a jantar.（我们正在吃晚饭）"],
+          ["eles/elas","Estão","Estão a + inf","Estão a trabalhar.（他们在工作）"],
+        ]
+      },
+      {
+        title:"进行时 vs 一般现在时",
+        headers:["时态","用法","例子","中文"],
+        rows:[
+          ["进行时","此刻正在进行","Estou a comer.","我现在正在吃饭。"],
+          ["一般现在时","习惯/规律","Como às 13h.","我（通常）一点吃饭。"],
+          ["进行时","强调当前状态","Está a chover.","（现在）正在下雨。"],
+          ["一般现在时","泛指规律","Chove muito em novembro.","十一月经常下雨。"],
+        ]
+      },
+      {
+        title:"欧葡 vs 巴西葡进行时对比",
+        headers:["","欧式葡语（Portugal）✓","巴西葡语（Brasil）"],
+        rows:[
+          ["结构","estar a + 不定式","estar + 现在分词（-ndo）"],
+          ["我正在吃","Estou a comer","Estou comendo"],
+          ["她正在工作","Ela está a trabalhar","Ela está trabalhando"],
+          ["你正在听","Estás a ouvir","Você está ouvindo"],
+        ]
+      }
+    ],
+    examples:[
+      {pt:"O que estás a fazer? — Estou a ler um livro.", zh:"你在做什么？——我在看书。"},
+      {pt:"Não posso falar agora, estou a conduzir.", zh:"我现在不能说话，我在开车。"},
+      {pt:"Estamos a aprender português juntos.", zh:"我们正在一起学葡语。"},
+      {pt:"Está a chover lá fora. Leva um chapéu-de-chuva.", zh:"外面正在下雨，带把伞吧。"},
+      {pt:"O bebé está a dormir. Fala mais baixo.", zh:"宝宝正在睡觉，说话小声点。"},
+    ],
+    quiz:[
+      {q:"我正在吃饭。Estou ___ comer.", opts:["a","de","em","para"], a:"a", hint:"欧葡进行时公式：estar + a + 不定式"},
+      {q:"她正在睡觉。Ela ___ a dormir.", opts:["está","é","esteve","será"], a:"está", hint:"ela → estar 现在时 → está"},
+      {q:"我们正在工作。___ a trabalhar.", opts:["Estamos","Somos","Ficamos","Vamos"], a:"Estamos", hint:"nós → estamos（estar 现在时）"},
+      {q:"你在做什么？O que estás a ___?", opts:["fazer","fazes","feito","fazendo"], a:"fazer", hint:"estar a + 不定式（原形）fazer"},
+      {q:"欧葡「我正在学习」= ?", opts:["Estou a estudar","Estou estudando","Estudo agora","Vou estudar"], a:"Estou a estudar", hint:"欧葡进行时：estar + a + 不定式（不是 -ndo 形式）"},
+      {q:"「Estou a comer」表达的是？", opts:["此刻正在吃","通常/习惯吃","刚刚吃完","将要吃"], a:"此刻正在吃", hint:"estar a + inf 表示此刻正在进行的动作"},
+    ]
+  },
+
+  // ──────────────── 14. 常用连词 ────────────────
+  {
+    id:"conjunctions", level:"A2", color:"#6b2d5a", icon:"🔀",
+    title:"常用连词", sub:"Conjunções",
+    intro:"连词把两个句子或短语连接起来，表达因果、转折、条件、时间等逻辑关系。掌握连词，葡语才能从「短句堆砌」变成「有逻辑的表达」。先把6个核心词背熟：e、mas、porque、quando、se、para。",
+    tip:"🧠 用逻辑分类记：转折→mas（但是），原因→porque（因为），条件→se（如果），时间→quando（当……时），目的→para（为了），并列→e（和）。遇到不确定的，先用这6个就够了。",
+    confusion:"⚠️ 最容易搞混：① porque（因为，解释原因）vs para（为了，说明目的）——「我学习 porque 我想进步」vs「我学习 para 进步」；② se 可以是「如果」(连词) 也可以是反身代词，靠语境区分；③ que 的用途很多（「那/让/的/说」），先记「Acho que…（我觉得……）」这个最常用搭配。",
+    tables:[
+      {
+        title:"并列连词（连接地位相等的成分）",
+        headers:["连词","意思","例子","中文"],
+        rows:[
+          ["e","和/而且","Falo português e inglês.","我说葡语和英语。"],
+          ["mas","但是","Quero ir, mas estou cansado.","我想去，但我累了。"],
+          ["ou","或者","Café ou chá?","咖啡还是茶？"],
+          ["nem … nem","既不……也不","Não bebo nem café nem chá.","我既不喝咖啡也不喝茶。"],
+          ["portanto","所以/因此","Está tarde, portanto vou embora.","已经晚了，所以我要走了。"],
+          ["além disso","除此之外/而且","É barato e, além disso, é bom.","便宜，而且还好。"],
+        ],
+        wide:true
+      },
+      {
+        title:"从属连词（引导从句）",
+        headers:["连词","意思","例子","中文"],
+        rows:[
+          ["porque","因为","Fico em casa porque chove.","因为下雨我留在家里。"],
+          ["que","（引导从句）那/让","Acho que falas muito bem.","我觉得你说得很好。"],
+          ["quando","当……时","Quando chegar, ligo-te.","我到的时候给你打电话。"],
+          ["se","如果","Se tiveres tempo, vem cá.","如果你有时间，来这里。"],
+          ["para","为了/以便","Estudo para aprender.","我学习是为了学会。"],
+          ["embora","虽然/尽管","Embora esteja cansado, continuo.","虽然累，我还是继续。"],
+          ["enquanto","当……的同时","Ouço música enquanto cozinho.","我一边做饭一边听音乐。"],
+          ["depois de","……之后","Depois de jantar, passeio.","晚饭后我散步。"],
+          ["antes de","……之前","Lava as mãos antes de comer.","吃饭前洗手。"],
+        ],
+        wide:true
+      }
+    ],
+    examples:[
+      {pt:"Gosto de Lisboa mas prefiro o Porto.", zh:"我喜欢里斯本，但我更喜欢波尔图。"},
+      {pt:"Não vou à praia porque está frio.", zh:"我不去海滩，因为天气冷。"},
+      {pt:"Se não estudas, não aprendes.", zh:"如果你不学习，你就学不会。"},
+      {pt:"Quando chegar a Lisboa, mando uma mensagem.", zh:"我到里斯本的时候给你发消息。"},
+      {pt:"Saio cedo para não chegar atrasado.", zh:"我早点出门，这样就不会迟到。"},
+      {pt:"Enquanto ele cozinha, ela lê o jornal.", zh:"他做饭的时候，她看报纸。"},
+    ],
+    quiz:[
+      {q:"我想去，但是我很累。Quero ir, ___ estou cansado.", opts:["mas","e","ou","porque"], a:"mas", hint:"转折关系用 mas（但是）"},
+      {q:"因为下雨，我在家。Fico em casa ___ está a chover.", opts:["porque","mas","quando","se"], a:"porque", hint:"原因用 porque（因为）"},
+      {q:"如果你有时间，给我打电话。___ tens tempo, liga-me.", opts:["Se","Quando","Porque","Mas"], a:"Se", hint:"条件关系用 se（如果）"},
+      {q:"我一边听音乐一边学习。Estudo ___ ouço música.", opts:["enquanto","quando","porque","antes de"], a:"enquanto", hint:"两件事同时进行用 enquanto"},
+      {q:"我学葡语是为了去旅行。Estudo português ___ viajar.", opts:["para","porque","quando","mas"], a:"para", hint:"目的用 para（为了）；别和 porque（原因）搞混"},
+      {q:"我既不喝咖啡也不喝茶。Não bebo ___ café ___ chá.", opts:["nem … nem","ou … ou","e … e","mas … mas"], a:"nem … nem", hint:"「既不……也不」用 nem … nem"},
+      {q:"吃饭前洗手。Lava as mãos ___ comer.", opts:["antes de","depois de","enquanto","para"], a:"antes de", hint:"「……之前」用 antes de（之后 = depois de）"},
+    ]
+  },
 ];
 
 // ══════════════════════════════════════════════════════════════════════
@@ -1257,7 +1494,7 @@ function App() {
 
       <div style={{ flex:1 }} />
       <div style={{ padding:"10px 12px", borderTop:"1px solid #2d2d5044", fontSize:9, color:"#f5e6c830", lineHeight:1.6 }}>
-        10 个语法单元 · {UNITS.reduce((s,u)=>s+u.quiz.length,0)} 道练习题 · 22 个动词
+        {UNITS.length} 个语法单元 · {UNITS.reduce((s,u)=>s+u.quiz.length,0)} 道练习题 · 22 个动词
       </div>
     </div>
   );
@@ -1268,7 +1505,7 @@ function App() {
       <div style={{ fontFamily:"'Playfair Display',serif", fontSize:isMobile?22:30, color:"#1a1a2e", marginBottom:4 }}>葡语语法全览 👋</div>
       <div style={{ fontSize:13, color:"#888", marginBottom:8 }}>Gramática Portuguesa · A1–A2 完整学习</div>
       <div style={{ background:"#fff", borderRadius:12, padding:"12px 18px", fontSize:13, color:"#555", lineHeight:1.8, marginBottom:28, maxWidth:640, boxShadow:"0 2px 10px #0000000a" }}>
-        📌 建议学习路径：<strong>名词与冠词 → Ser/Estar → 动词现在时 → 形容词 → 代词 → 过去时 → 其余</strong><br/>
+        📌 建议学习路径：<strong>名词与冠词 → Ser/Estar → 动词现在时 → 形容词 → 代词 → 进行时 → 反身动词 → 动词搭配 → 连词 → 过去时 → …</strong><br/>
         每个单元先看「参考表」，再做「多选练习」，遇到不懂回头查表。
       </div>
 
