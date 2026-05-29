@@ -83,8 +83,8 @@ const UNITS = [
     id:"nouns", level:"A1", color:"#1d3557", icon:"📌",
     title:"名词与冠词", sub:"Substantivos e Artigos",
     intro:"葡语名词有「性」（阳/阴）和「数」（单/复），冠词必须与名词「性数一致」。这是葡语最基础也最重要的规则。",
-    tip:"🧠 记忆法：词尾 -o 通常是阳性（livr**o** 书），词尾 -a 通常是阴性（cas**a** 房子）。定冠词 o/a 就像中文的「这本/这座」，不定冠词 um/uma 就像「一本/一座」。",
-    confusion:"⚠️ 容易搞混：① homem（男人）和 mulher（女人）词尾不典型；② 有些 -a 结尾是阳性（o dia 一天，o mapa 地图）；③ 缩合形式（do/da/no/na）一定要背熟！",
+    tip:"🧠 记忆法：词尾 -o 通常阳性，词尾 -a 通常阴性——记住这条规律能猜对约 80%！词尾 -ção/-dade/-gem/-eza 几乎全是阴性；-ema/-oma/-eu/-or 几乎全是阳性。详见下方「性别规律表」。",
+    confusion:"⚠️ 容易搞混：① -a 结尾但阳性的词：o dia（天）、o mapa（地图）、o problema/sistema/tema（-ema 词尾来自希腊语，全是阳性！）；② -or 结尾但阴性的词：a flor（花）、a dor（痛）、a cor（颜色）；③ a mão（手）虽然 -ão 通常是阳性，但它是阴性；④ 缩合形式（do/da/no/na）一定要背熟！",
     tables:[
       {
         title:"定冠词 Artigo Definido（= the）",
@@ -120,6 +120,39 @@ const UNITS = [
           ["a + as","às","às aulas","去上课"],
         ],
         wide:true
+      },
+      {
+        title:"名词性别规律（词尾判断法）",
+        headers:["词尾","通常性别","常见例子","⚠️ 特例/注意"],
+        rows:[
+          ["-o","阳性 ♂","livro, carro, menino, filho","⚠️ a mão（手）是阴性"],
+          ["-a","阴性 ♀","casa, mesa, escola, filha","⚠️ o dia, o mapa, o problema 是阳性"],
+          ["-ção / -são","阴性 ♀","nação, televisão, situação","几乎无例外"],
+          ["-dade / -tude","阴性 ♀","cidade, liberdade, juventude","几乎无例外"],
+          ["-eza","阴性 ♀","beleza, riqueza, tristeza","几乎无例外"],
+          ["-gem","阴性 ♀","viagem, mensagem, garagem","几乎无例外"],
+          ["-or","阳性 ♂","professor, calor, amor","⚠️ a flor, a dor, a cor 是阴性"],
+          ["-ema / -oma","阳性 ♂","problema, sistema, tema","词尾像-a但全是阳性（希腊语来源）"],
+          ["-eu","阳性 ♂","museu, chapéu, europeu","几乎无例外"],
+        ],
+        wide:true
+      },
+      {
+        title:"⚠️ 必背性别特例",
+        headers:["单词","意思","性别","记忆提示"],
+        rows:[
+          ["o dia","天/日子","阳性 ♂","词尾-a但阳性，靠冠词记住"],
+          ["o mapa","地图","阳性 ♂","词尾-a但阳性"],
+          ["o problema","问题","阳性 ♂","-ema/-oma 词尾（希腊语来源）全是阳性"],
+          ["o sistema","系统","阳性 ♂","同上"],
+          ["o tema","主题","阳性 ♂","同上"],
+          ["o clima","气候","阳性 ♂","同上"],
+          ["a flor","花","阴性 ♀","-or 通常阳性，但 flor/dor/cor 是例外"],
+          ["a dor","痛/疼痛","阴性 ♀","同上"],
+          ["a cor","颜色","阴性 ♀","同上"],
+          ["a mão","手","阴性 ♀","-ão 通常阳性（avião, coração），但 mão 是阴性"],
+        ],
+        wide:true
       }
     ],
     examples:[
@@ -141,6 +174,10 @@ const UNITS = [
       {q:"Vou ___ médico. (去看医生)", opts:["ao","à","do","no"], a:"ao", hint:"a+o=ao"},
       {q:"Gosto ___ livro. (喜欢这本书)", opts:["do","da","no","ao"], a:"do", hint:"de+o=do"},
       {q:"___ flores (花们, 阴复, 特指)", opts:["as","os","umas","a"], a:"as", hint:"定冠词 + 阴性复数"},
+      {q:"___ cidade (城市)", opts:["a","o","um","os"], a:"a", hint:"-dade 词尾几乎全是阴性：cidade, liberdade, universidade"},
+      {q:"___ problema (问题)", opts:["o","a","um","uma"], a:"o", hint:"-ema/-oma 词尾（希腊语）全是阳性！o problema, o sistema, o tema"},
+      {q:"___ flor (花)", opts:["a","o","as","os"], a:"a", hint:"-or 通常阳性，但 flor/dor/cor 是阴性特例"},
+      {q:"___ dia (天/日子)", opts:["o","a","um","as"], a:"o", hint:"词尾-a但阳性特例：o dia, o mapa, o clima"},
     ]
   },
 
